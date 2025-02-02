@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="NEu-DK-6pL">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="nm6-VQ-cZw">
     <device id="retina6_3" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -114,6 +113,7 @@
                     <navigationItem key="navigationItem" id="9zf-Jj-rWc"/>
                     <connections>
                         <outlet property="tableView" destination="Ogs-xC-u4h" id="Fs0-kg-GLx"/>
+                        <segue destination="NEu-DK-6pL" kind="show" identifier="ShowSingleImage" id="1bh-IQ-uyY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -231,13 +231,28 @@
                     <view key="view" contentMode="scaleToFill" id="kLW-QF-hdV">
                         <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="0Ig-94-zLy">
+                                <rect key="frame" x="0.0" y="106" width="402" height="685"/>
+                            </imageView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="dDi-dX-whP"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" name="YP Black (iOS)"/>
+                        <constraints>
+                            <constraint firstItem="dDi-dX-whP" firstAttribute="trailing" secondItem="0Ig-94-zLy" secondAttribute="trailing" id="Hz1-Wm-0ks"/>
+                            <constraint firstItem="0Ig-94-zLy" firstAttribute="top" secondItem="dDi-dX-whP" secondAttribute="top" id="ZxV-Ba-4lS"/>
+                            <constraint firstItem="dDi-dX-whP" firstAttribute="bottom" secondItem="0Ig-94-zLy" secondAttribute="bottom" id="o7D-Yr-A5o"/>
+                            <constraint firstItem="0Ig-94-zLy" firstAttribute="leading" secondItem="kLW-QF-hdV" secondAttribute="leading" id="s6h-VN-Ygu"/>
+                        </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="Njg-nc-mgb"/>
+                    <connections>
+                        <outlet property="singleImage" destination="0Ig-94-zLy" id="caJ-nf-yc5"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2zc-xH-yq2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1551" y="-800"/>
+            <point key="canvasLocation" x="1093" y="666"/>
         </scene>
     </scenes>
     <resources>
@@ -256,8 +271,5 @@
         <namedColor name="YP White (iOS)">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
     </resources>
 </document>
