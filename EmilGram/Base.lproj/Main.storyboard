@@ -17,10 +17,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <tabBarAppearance key="standardAppearance"/>
+                        <color key="tintColor" name="YP White (iOS)"/>
+                        <color key="selectedImageTintColor" name="YP White (iOS)"/>
+                        <tabBarAppearance key="standardAppearance">
+                            <color key="backgroundColor" name="YP Black (iOS)"/>
+                        </tabBarAppearance>
                     </tabBar>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="6Et-0x-OeK"/>
+                        <segue destination="duG-CB-jzT" kind="relationship" relationship="viewControllers" id="6Et-0x-OeK"/>
                         <segue destination="jj0-KJ-RlP" kind="relationship" relationship="viewControllers" id="BQZ-jT-BUs"/>
                     </connections>
                 </tabBarController>
@@ -106,14 +110,14 @@
                             <constraint firstAttribute="trailing" secondItem="Ogs-xC-u4h" secondAttribute="trailing" id="oIC-e0-wSK"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="" image="tab_editorial_active" selectedImage="tab_editorial_active" id="Wve-jA-m8Q"/>
+                    <navigationItem key="navigationItem" id="9zf-Jj-rWc"/>
                     <connections>
                         <outlet property="tableView" destination="Ogs-xC-u4h" id="Fs0-kg-GLx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="176" y="-36"/>
+            <point key="canvasLocation" x="1094.0298507462685" y="-36.384439359267731"/>
         </scene>
         <!--Profile View Controller-->
         <scene sceneID="sRq-cd-qck">
@@ -193,7 +197,31 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TJU-jW-Ii1" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="916.79389312977094" y="-35.211267605633807"/>
+            <point key="canvasLocation" x="1835.8208955223879" y="-35.697940503432491"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="N4u-Qt-bYl">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="duG-CB-jzT" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="" image="tab_editorial_active" selectedImage="tab_editorial_active" id="Wve-jA-m8Q"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="PNp-rs-cQi">
+                        <rect key="frame" x="0.0" y="62" width="402" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" name="YP White (iOS)"/>
+                        <color key="barTintColor" name="YP White (iOS)"/>
+                        <navigationBarAppearance key="standardAppearance">
+                            <color key="backgroundColor" name="YP Black (iOS)"/>
+                        </navigationBarAppearance>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="bME-8Z-3Te"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nAe-Q5-kNP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="174.62686567164178" y="-36.384439359267731"/>
         </scene>
     </scenes>
     <resources>
