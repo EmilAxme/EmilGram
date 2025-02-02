@@ -1,6 +1,8 @@
 import UIKit
 
-final class SingleImageViewController {
+final class SingleImageViewController: UIViewController {
    
-    
+    override func viewDidLoad() {
+        
+    }
 }
