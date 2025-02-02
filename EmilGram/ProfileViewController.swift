@@ -11,6 +11,7 @@ final class ProfileViewController: UIViewController{
     @IBOutlet private weak var userNameLabel: UILabel!
     @IBOutlet private weak var idLabel: UILabel!
     @IBOutlet private weak var descriptionLabel: UILabel!
+    
     @IBOutlet private weak var logOutButton: UIButton!
     @IBAction private func didTapLogOut() {
     }
