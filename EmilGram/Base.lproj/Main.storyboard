@@ -209,9 +209,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="0Ig-94-zLy">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Kg7-nP-H88">
                                 <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
-                            </imageView>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="0Ig-94-zLy">
+                                        <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                </subviews>
+                                <viewLayoutGuide key="contentLayoutGuide" id="WXD-MX-BBh"/>
+                                <viewLayoutGuide key="frameLayoutGuide" id="FRU-aK-f36"/>
+                                <connections>
+                                    <outlet property="delegate" destination="NEu-DK-6pL" id="W0w-dX-GeF"/>
+                                </connections>
+                            </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gXt-ji-OEu" userLabel="backButton">
                                 <rect key="frame" x="8" y="10" width="44" height="44"/>
                                 <constraints>
@@ -229,22 +240,23 @@
                         <viewLayoutGuide key="safeArea" id="dDi-dX-whP"/>
                         <color key="backgroundColor" name="YP Black (iOS)"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="0Ig-94-zLy" secondAttribute="trailing" id="Hz1-Wm-0ks"/>
-                            <constraint firstItem="0Ig-94-zLy" firstAttribute="top" secondItem="kLW-QF-hdV" secondAttribute="top" id="ZxV-Ba-4lS"/>
+                            <constraint firstAttribute="trailing" secondItem="Kg7-nP-H88" secondAttribute="trailing" id="Bdd-YI-6Hy"/>
+                            <constraint firstAttribute="bottom" secondItem="Kg7-nP-H88" secondAttribute="bottom" id="Klg-2U-53Z"/>
+                            <constraint firstItem="Kg7-nP-H88" firstAttribute="top" secondItem="kLW-QF-hdV" secondAttribute="top" id="f2B-G6-Kv7"/>
                             <constraint firstItem="gXt-ji-OEu" firstAttribute="leading" secondItem="dDi-dX-whP" secondAttribute="leading" constant="8" id="ixY-nU-zZt"/>
-                            <constraint firstAttribute="bottom" secondItem="0Ig-94-zLy" secondAttribute="bottom" id="o7D-Yr-A5o"/>
-                            <constraint firstItem="0Ig-94-zLy" firstAttribute="leading" secondItem="kLW-QF-hdV" secondAttribute="leading" id="s6h-VN-Ygu"/>
                             <constraint firstItem="gXt-ji-OEu" firstAttribute="top" secondItem="dDi-dX-whP" secondAttribute="top" constant="10" id="wQo-Hn-oUu"/>
+                            <constraint firstItem="Kg7-nP-H88" firstAttribute="leading" secondItem="kLW-QF-hdV" secondAttribute="leading" id="zaG-y7-IkB"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Njg-nc-mgb"/>
                     <connections>
+                        <outlet property="scrollView" destination="Kg7-nP-H88" id="sYw-iJ-Li5"/>
                         <outlet property="singleImage" destination="0Ig-94-zLy" id="caJ-nf-yc5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2zc-xH-yq2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1093" y="666"/>
+            <point key="canvasLocation" x="1090.909090909091" y="665.89958158995819"/>
         </scene>
     </scenes>
     <resources>
