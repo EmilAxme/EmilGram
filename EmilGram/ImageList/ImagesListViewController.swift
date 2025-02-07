@@ -8,8 +8,7 @@
 import UIKit
 
 final class ImagesListViewController: UIViewController {
-    @IBOutlet private var tableView: UITableView!
-    
+    // MARK: - Properties
     let showSingleImageSegueIdentifier = "ShowSingleImage"
     let photosName: [String] = Array(0..<20).map{ "\($0)"}
     
@@ -20,12 +19,17 @@ final class ImagesListViewController: UIViewController {
         return formatter
     }()
     
+    // MARK: - Outlets
+    @IBOutlet private var tableView: UITableView!
+    
+    //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.rowHeight = 200
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
     }
     
+    //MARK: - Override func
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showSingleImageSegueIdentifier {
             guard

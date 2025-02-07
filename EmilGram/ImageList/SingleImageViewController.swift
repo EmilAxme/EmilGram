@@ -1,8 +1,9 @@
 import UIKit
 
 final class SingleImageViewController: UIViewController, UIScrollViewDelegate {
+    // MARK: - Properties
     var image: UIImage?
-    
+    // MARK: - Actions
     @IBAction func didTapShareButton(_ sender: Any) {
         guard let image else { return }
         let share = UIActivityViewController(
@@ -14,6 +15,8 @@ final class SingleImageViewController: UIViewController, UIScrollViewDelegate {
     @IBAction private func didTapBackButton() {
         dismiss(animated: true, completion: nil)
     }
+    
+    // MARK: - Outlets
     @IBOutlet private var scrollView: UIScrollView!
     @IBOutlet fileprivate var singleImage: UIImageView!{
         didSet{
@@ -24,6 +27,7 @@ final class SingleImageViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         guard let image = image else { return }
@@ -35,6 +39,7 @@ final class SingleImageViewController: UIViewController, UIScrollViewDelegate {
         rescaleAndCenterImageInScrollView(image: image)
     }
     
+    // MARK: - Functions
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
         let minZoomScale = scrollView.minimumZoomScale
         let maxZoomScale = scrollView.maximumZoomScale
