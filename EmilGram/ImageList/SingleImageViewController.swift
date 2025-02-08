@@ -4,7 +4,7 @@ final class SingleImageViewController: UIViewController, UIScrollViewDelegate {
     // MARK: - Properties
     var image: UIImage?
     // MARK: - Actions
-    @IBAction func didTapShareButton(_ sender: Any) {
+    @IBAction private func didTapShareButton(_ sender: Any) {
         guard let image else { return }
         let share = UIActivityViewController(
             activityItems: [image],
@@ -18,7 +18,7 @@ final class SingleImageViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: - Outlets
     @IBOutlet private var scrollView: UIScrollView!
-    @IBOutlet fileprivate var singleImage: UIImageView!{
+    @IBOutlet private var singleImage: UIImageView!{
         didSet{
             guard isViewLoaded else { return }
             guard let image = singleImage.image else { return }
