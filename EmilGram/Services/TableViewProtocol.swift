@@ -2,7 +2,7 @@ import UIKit
 
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        performSegue(withIdentifier: showSingleImageSegueIdentifier, sender: indexPath)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -45,7 +45,7 @@ extension ImagesListViewController {
         
         cell.dateLabel.text = "\(dateFormatter.string(from: Date()))"
         
-        let buttonImage = indexPath.row.isMultiple(of: 2) ? UIImage(named: "LikeButton") : UIImage(named: "LikeButtonActive")
+        let buttonImage = indexPath.row.isMultiple(of: 2) ? UIImage(named: "LikeButtonActive") : UIImage(named: "LikeButton")
         cell.likeButton.setImage(buttonImage, for: .normal)
     }
 }
