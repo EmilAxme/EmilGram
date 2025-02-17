@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="nm6-VQ-cZw">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="yL7-GZ-ZQu">
     <device id="retina6_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -31,6 +32,22 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Mj5-LG-IgX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="558" y="-800"/>
+        </scene>
+        <!--Auth View Controller-->
+        <scene sceneID="s24-7L-7Y0">
+            <objects>
+                <viewController id="cNE-2I-h7F" customClass="AuthViewController" customModule="EmilGram" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="BHO-Ze-Elo">
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="LpP-u7-A0J"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="8Lk-j6-iwL"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wL1-oq-QiH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2424.5454545454545" y="-800.20920502092054"/>
         </scene>
         <!--ImageList-->
         <scene sceneID="tne-QT-ifu">
@@ -137,6 +154,21 @@
             </objects>
             <point key="canvasLocation" x="1835.8208955223879" y="-35.697940503432491"/>
         </scene>
+        <!--Web View View Controller-->
+        <scene sceneID="Uas-w2-Izz">
+            <objects>
+                <viewController id="zhk-9p-Mfd" customClass="WebViewViewController" customModule="EmilGram" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="W9M-pf-C2W">
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="lO9-g6-Lk3"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="orS-si-I8f" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3250" y="-800"/>
+        </scene>
         <!--Single Image View Controller-->
         <scene sceneID="8rr-ba-hQj">
             <objects>
@@ -208,6 +240,24 @@
             </objects>
             <point key="canvasLocation" x="1090.909090909091" y="665.89958158995819"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="pdn-rg-kVN">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="yL7-GZ-ZQu" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Qrs-Et-Tnt">
+                        <rect key="frame" x="0.0" y="62" width="440" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="cNE-2I-h7F" kind="relationship" relationship="rootViewController" id="8HX-ca-Ar4"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ZG8-ui-d2v" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1532.7272727272727" y="-800.20920502092054"/>
+        </scene>
     </scenes>
     <resources>
         <image name="0" width="1600" height="1059"/>
@@ -222,5 +272,8 @@
         <namedColor name="YP White (iOS)">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>

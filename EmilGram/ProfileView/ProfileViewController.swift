@@ -35,7 +35,7 @@ final class ProfileViewController: UIViewController{
     private lazy var logOutButton: UIButton = {
         let logOutImage = UIImage(named: "logOut_button")
         let logOutButton = UIButton.systemButton(with: logOutImage!, target: self, action: nil)
-        addToView(logOutButton)
+        view.addToView(logOutButton)
         return logOutButton
     }()
     
@@ -50,7 +50,7 @@ final class ProfileViewController: UIViewController{
         let labelsStackView = UIStackView(arrangedSubviews: [nameLabel, userIDLabel, descriptionLabel])
         labelsStackView.axis = .vertical
         labelsStackView.spacing = 8
-        addToView(labelsStackView)
+        view.addToView(labelsStackView)
         
         NSLayoutConstraint.activate([
             profileImageView.widthAnchor.constraint(equalToConstant: 70),
@@ -77,13 +77,13 @@ final class ProfileViewController: UIViewController{
         label.text = text
         label.textColor = color
         label.font = font
-        addToView(label)
+        view.addToView(label)
         return label
     }
     
     private func createImageView() -> UIImageView {
         let imageView = UIImageView()
-        addToView(imageView)
+        view.addToView(imageView)
         return imageView
     }
 }
