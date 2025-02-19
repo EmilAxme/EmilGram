@@ -2,18 +2,7 @@ import UIKit
 
 final class AuthViewController: UIViewController {
     //MARK: - View's
-    lazy var authButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.addTarget(self, action: #selector(goToAuth), for: .touchUpInside)
-        button.setTitle("Войти", for: .normal)
-        button.setTitleColor(UIColor(named: "YP Black (iOS)") ?? .black, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 17, weight: .bold)
-        button.backgroundColor = UIColor(named: "YP White (iOS)")
-        button.layer.cornerRadius = 16
-        button.layer.masksToBounds = true
-        view.addToView(button)
-        return button
-    }()
+    @IBOutlet weak var authButton: UIButton!
     
     lazy var unsplashLogo: UIImageView = {
         let image = UIImage(named: "unsplashLogo")
@@ -32,6 +21,16 @@ final class AuthViewController: UIViewController {
     
     //MARK: - private functions
     private func setupUI() {
+        
+        authButton.addTarget(self, action: #selector(goToAuth), for: .touchUpInside)
+        authButton.setTitle("Войти", for: .normal)
+        authButton.titleLabel?.font = .systemFont(ofSize: 17, weight: .bold)
+        authButton.setTitleColor(UIColor(named: "YP Black (iOS)") ?? .black, for: .normal)
+        authButton.backgroundColor = UIColor(named: "YP White (iOS)")
+        authButton.layer.cornerRadius = 16
+        authButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        
         NSLayoutConstraint.activate([
             authButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -90),
             authButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),

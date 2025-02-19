@@ -40,14 +40,25 @@
                     <view key="view" contentMode="scaleToFill" id="BHO-Ze-Elo">
                         <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fCX-wM-FlV">
+                                <rect key="frame" x="209" y="441" width="24" height="58"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="Button"/>
+                            </button>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="LpP-u7-A0J"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" id="8Lk-j6-iwL"/>
+                    <connections>
+                        <outlet property="authButton" destination="fCX-wM-FlV" id="9Yx-YO-s43"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wL1-oq-QiH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2424.5454545454545" y="-800.20920502092054"/>
+            <point key="canvasLocation" x="2423.1818181818185" y="-800.20920502092054"/>
         </scene>
         <!--ImageList-->
         <scene sceneID="tne-QT-ifu">

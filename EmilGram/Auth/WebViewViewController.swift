@@ -2,7 +2,7 @@ import UIKit
 import WebKit
 
 final class WebViewViewController: UIViewController {
-    //MARK: - View's
+    //MARK: - Property's
     lazy var webView: WKWebView = {
         var WKWebView = WKWebView()
         view.addToView(WKWebView)
@@ -10,8 +10,10 @@ final class WebViewViewController: UIViewController {
         return WKWebView
     }()
     
+    weak var delegate: WebViewViewControllerDelegate?
     //MARK: - Lifecycle
     override func viewDidLoad() {
+        webView.navigationDelegate = self
         setupUI()
         loadAuthView()
         super.viewDidLoad()
@@ -53,4 +55,32 @@ final class WebViewViewController: UIViewController {
     //MARK: - ENUM
 enum WebViewConstants {
     static let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
+}
+
+extension WebViewViewController: WKNavigationDelegate {
+    func webView(_ webView: WKWebView,
+                 decidePolicyFor navigationAction: WKNavigationAction,
+                 decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        if let code = code(from: navigationAction) {
+            //TODO: process code
+            decisionHandler(.cancel)
+        }
+        else {
+            decisionHandler(.allow)
+        }
+    }
+    
+    private func code(from navigationAction: WKNavigationAction) -> String? {
+        if let url = navigationAction.request.url,
+           let urlComponents = URLComponents(string: url.absoluteString),
+           urlComponents.path == "/oauth/callback",
+           let items = urlComponents.queryItems,
+           let codeItem = items.first(where: { $0.name == "code"})
+        {
+            return codeItem.value
+        }
+        else {
+            return nil
+        }
+    }
 }
