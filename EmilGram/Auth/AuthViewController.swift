@@ -2,7 +2,8 @@ import UIKit
 
 final class AuthViewController: UIViewController {
     //MARK: - View's
-    @IBOutlet weak var authButton: UIButton!
+    let showWebViewSegueIdentifier = "ShowWebView"
+    @IBOutlet private var authButton: UIButton!
     
     lazy var unsplashLogo: UIImageView = {
         let image = UIImage(named: "unsplashLogo")
@@ -11,7 +12,7 @@ final class AuthViewController: UIViewController {
         return imageView
     }()
     
-    // MARK: - Lifecycle
+    // MARK: - Override function's
     override func viewDidLoad() {
         view.backgroundColor = UIColor(named: "YP Black (iOS)")
         setupUI()
@@ -19,10 +20,22 @@ final class AuthViewController: UIViewController {
         super.viewDidLoad()
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == showWebViewSegueIdentifier {
+            guard
+                let webViewViewController = segue.destination as? WebViewViewController
+            else {
+                assertionFailure("Failed to prepare for \(showWebViewSegueIdentifier)")
+                return
+            }
+            webViewViewController.delegate = self
+        } else {
+            super.prepare(for: segue, sender: sender)
+        }
+    }
     //MARK: - private functions
     private func setupUI() {
         
-        authButton.addTarget(self, action: #selector(goToAuth), for: .touchUpInside)
         authButton.setTitle("Войти", for: .normal)
         authButton.titleLabel?.font = .systemFont(ofSize: 17, weight: .bold)
         authButton.setTitleColor(UIColor(named: "YP Black (iOS)") ?? .black, for: .normal)
@@ -52,11 +65,18 @@ final class AuthViewController: UIViewController {
         navigationController?.navigationBar.backIndicatorImage = UIImage(named: "back")
         navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "back")
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        navigationItem.backBarButtonItem?.tintColor = UIColor(named: "YP Black (iOS)")
+        navigationItem.backBarButtonItem?.tintColor = .black
+    }
+}
+
+extension AuthViewController: WebViewViewControllerDelegate {
+    func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
+        //MARK: - TODO
     }
     
-    @objc private func goToAuth() {
-        let authVC = WebViewViewController()
-        navigationController?.pushViewController(authVC, animated: true)
+    func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
+        vc.dismiss(animated: true)
     }
+    
+    
 }

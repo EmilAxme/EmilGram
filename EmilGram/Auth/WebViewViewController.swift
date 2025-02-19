@@ -3,7 +3,14 @@ import WebKit
 
 final class WebViewViewController: UIViewController {
     //MARK: - Property's
-    lazy var webView: WKWebView = {
+    private lazy var progressView: UIProgressView = {
+        var progressView = UIProgressView()
+        view.addToView(progressView)
+        progressView.tintColor = UIColor(named: "YP Black (iOS)")
+        return progressView
+    }()
+    
+    private lazy var webView: WKWebView = {
         var WKWebView = WKWebView()
         view.addToView(WKWebView)
         WKWebView.backgroundColor = .white
@@ -18,6 +25,31 @@ final class WebViewViewController: UIViewController {
         loadAuthView()
         super.viewDidLoad()
         
+        webView.addObserver(
+            self,
+            forKeyPath: #keyPath(WKWebView.estimatedProgress),
+            options: [.new],
+            context: nil)
+    }
+    
+    //MARK: - Observe Object's
+    
+    override func observeValue(
+        forKeyPath keyPath: String?,
+        of object: Any?,
+        change: [NSKeyValueChangeKey : Any]?,
+        context: UnsafeMutableRawPointer?
+    ) {
+        if keyPath == #keyPath(WKWebView.estimatedProgress) {
+            updateProgress()
+        } else {
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+        }
+    }
+    
+    private func updateProgress() {
+        progressView.progress = Float(webView.estimatedProgress)
+        progressView.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
     }
     //MARK: - Private function's
     private func setupUI() {
@@ -26,6 +58,10 @@ final class WebViewViewController: UIViewController {
             webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             webView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            progressView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            progressView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            progressView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
     
@@ -56,7 +92,7 @@ final class WebViewViewController: UIViewController {
 enum WebViewConstants {
     static let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
 }
-
+    //MARK: - Extension
 extension WebViewViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView,
                  decidePolicyFor navigationAction: WKNavigationAction,
