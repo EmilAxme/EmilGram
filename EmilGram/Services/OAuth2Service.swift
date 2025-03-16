@@ -8,9 +8,13 @@ final class OAuth2Service {
     
     private func loadRequest(code: String) -> URLRequest? {
         let baseUrl = URL(string: "https://unsplash.com/oauth/token")
-        guard let baseUrl else { return nil }
+        guard let baseUrl else {
+            print("Ошибка: невозможно создать baseURL")
+            return nil
+        }
         
         guard var urlComponents = URLComponents(url: baseUrl, resolvingAgainstBaseURL: false) else {
+            print("Ошибка: не удалось создать URLComponents из \(baseUrl)")
             return nil
         }
         
@@ -23,7 +27,7 @@ final class OAuth2Service {
         ]
         
         guard let url = urlComponents.url else {
-            print("не успешно")
+            print("Ошибка: не удалось получить URL из URLComponents: \(urlComponents)")
             return nil
         }
         
@@ -73,7 +77,7 @@ final class OAuth2Service {
                         if statusCode == 400, let token = OAuth2TokenStorage.shared.token {
                             print("Несмотря на 400, токен уже сохранён: \(token)")
                             DispatchQueue.main.async {
-                                completion(.success(token)) 
+                                completion(.success(token))
                             }
                             return
                         }
