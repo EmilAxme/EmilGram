@@ -30,7 +30,7 @@
                         </constraints>
                     </view>
                     <connections>
-                        <segue destination="yL7-GZ-ZQu" kind="show" identifier="showAuth" id="tas-Z0-UjJ"/>
+                        <segue destination="yL7-GZ-ZQu" kind="presentation" identifier="showAuth" modalPresentationStyle="fullScreen" id="tas-Z0-UjJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PDQ-uY-876" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -66,7 +66,7 @@
             <objects>
                 <viewController id="cNE-2I-h7F" customClass="AuthViewController" customModule="EmilGram" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="BHO-Ze-Elo">
-                        <rect key="frame" x="0.0" y="0.0" width="440" height="946"/>
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fCX-wM-FlV">
@@ -201,7 +201,7 @@
             <objects>
                 <viewController id="zhk-9p-Mfd" customClass="WebViewViewController" customModule="EmilGram" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="W9M-pf-C2W">
-                        <rect key="frame" x="0.0" y="0.0" width="440" height="946"/>
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="lO9-g6-Lk3"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -290,7 +290,7 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="gWa-OI-aKn"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Qrs-Et-Tnt">
-                        <rect key="frame" x="0.0" y="0.0" width="440" height="56"/>
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>

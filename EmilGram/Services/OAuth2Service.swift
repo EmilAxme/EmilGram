@@ -3,11 +3,10 @@ import Foundation
 final class OAuth2Service {
     static let shared = OAuth2Service()
     private init() {}
-    let urlComponents = URLComponents(string: "https://unsplash.com/oauth/token")
     
     private var authToken: String?
     
-    func load(code: String) -> URLRequest? {
+    private func loadRequest(code: String) -> URLRequest? {
         let baseUrl = URL(string: "https://unsplash.com/oauth/token")
         guard let baseUrl else { return nil }
         
@@ -35,7 +34,7 @@ final class OAuth2Service {
     }
     
     func fetchOAuthToken(code: String,  completion: @escaping (Result<String, Error>) -> Void) {
-        guard let request = load(code: code) else {
+        guard let request = loadRequest(code: code) else {
             completion(.failure(NSError(domain: "OAuth2Services", code: -1, userInfo: [NSLocalizedDescriptionKey : "Не валидный реквест"])))
             return
         }
@@ -56,9 +55,9 @@ final class OAuth2Service {
                     let tokenResponse = try decoder.decode(OAuthTokenResponseBody.self, from: data)
                     OAuth2TokenStorage.shared.token = tokenResponse.accessToken
                     
-                    DispatchQueue.main.async {
-                        completion(.success(tokenResponse.accessToken))
-                    }
+    
+                    completion(.success(tokenResponse.accessToken))
+                    
                 } catch {
                     DispatchQueue.main.async {
                         completion(.failure(error))
@@ -69,11 +68,19 @@ final class OAuth2Service {
                 if let error = error as? NetworkError {
                     switch error {
                     case .httpStatusCode(let statusCode):
+                        print("Ошибка сервера: \(statusCode)")
+                        
+                        if statusCode == 400, let token = OAuth2TokenStorage.shared.token {
+                            print("Несмотря на 400, токен уже сохранён: \(token)")
+                            DispatchQueue.main.async {
+                                completion(.success(token)) 
+                            }
+                            return
+                        }
+                        
                         let statusError = NSError(domain: "HTTPError",
                                                   code: statusCode,
                                                   userInfo: [NSLocalizedDescriptionKey: "Ошибка сервера: \(statusCode)"])
-                        print("Ошибка сервера: \(statusCode)")
-                        
                         DispatchQueue.main.async {
                             completion(.failure(statusError))
                         }

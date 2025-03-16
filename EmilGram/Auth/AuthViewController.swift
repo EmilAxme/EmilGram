@@ -81,10 +81,10 @@ extension AuthViewController: WebViewViewControllerDelegate {
             case .success(let token):
                 print("Токен получен и сохранен: \(token)")
                 
-                DispatchQueue.main.async {
-                    self.delegate?.authViewController(self, didAuthenticateWithCode: code)
-                    self.dismiss(animated: true)
-                }
+                
+                self.delegate?.authViewController(self, didAuthenticateWithCode: code)
+                self.dismiss(animated: true)
+                
             case .failure(let error):
                 print("Ошибка получения токена: \(error)")
             }

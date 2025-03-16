@@ -11,7 +11,7 @@ final class SplashViewController: UIViewController {
         super.viewDidAppear(animated)
 
         // Проверяем, есть ли токен в UserDefaults
-        let savedToken = UserDefaults.standard.string(forKey: "token")
+        let savedToken = oAuth2TokenStorage.token
         
         print("Токен в UserDefaults: \(savedToken ?? "нет токена")")
 
@@ -43,6 +43,7 @@ extension SplashViewController {
                 assertionFailure("Failed to prepare for \(showAuthenticationScreenSegueIdentifier)")
                 return
             }
+            
             viewController.delegate = self
             
         } else {
@@ -65,8 +66,14 @@ extension SplashViewController: AuthViewControllerDelegate {
             switch result {
             case .success:
                 self.switchToTabBarController()
-            case .failure:
-                break
+            case .failure(let error):
+                print("Ошибка при получении токена: \(error)")
+                if OAuth2TokenStorage.shared.token != nil {
+                    print("Несмотря на ошибку, токен уже сохранён. Переход в ленту.")
+                    self.switchToTabBarController()
+                } else {
+                    print("Токен отсутствует. Не удалось выполнить вход.")
+                }
             }
         }
     }
