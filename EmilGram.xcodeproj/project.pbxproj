@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		20E6B23D2D8EE6D000BE931A /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 20E6B23C2D8EE6D000BE931A /* ProgressHUD */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		2015EEFA2D453C1400C8D39D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -65,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				20E6B23D2D8EE6D000BE931A /* ProgressHUD in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,6 +130,7 @@
 			);
 			name = EmilGram;
 			packageProductDependencies = (
+				20E6B23C2D8EE6D000BE931A /* ProgressHUD */,
 			);
 			productName = EmilGram;
 			productReference = 2015EEE32D453C1300C8D39D /* EmilGram.app */;
@@ -208,6 +214,9 @@
 			);
 			mainGroup = 2015EEDA2D453C1300C8D39D;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				20E6B23B2D8EE6D000BE931A /* XCRemoteSwiftPackageReference "ProgressHUD" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 2015EEE42D453C1300C8D39D /* Products */;
 			projectDirPath = "";
@@ -577,6 +586,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		20E6B23B2D8EE6D000BE931A /* XCRemoteSwiftPackageReference "ProgressHUD" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/relatedcode/ProgressHUD";
+			requirement = {
+				kind = exactVersion;
+				version = 14.1.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		20E6B23C2D8EE6D000BE931A /* ProgressHUD */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 20E6B23B2D8EE6D000BE931A /* XCRemoteSwiftPackageReference "ProgressHUD" */;
+			productName = ProgressHUD;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2015EEDB2D453C1300C8D39D /* Project object */;
 }

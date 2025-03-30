@@ -1,41 +1,27 @@
 import Foundation
-
-enum AuthServiceError: Error {
-    case invalidRequest
-}
-
-final class OAuth2Service {
-    
-    //MARK: Properties
-    static let shared = OAuth2Service()
+ 
+final class ProfileImageService {
+    static let shared = ProfileImageService()
     private init() {}
     
-    private let urlSession = URLSession.shared
+    private(set) var avatarURL: String?
+    
     private var task: URLSessionTask?
     private var lastCode: String?
+    private var profileService = ProfileService.shared
     
-    private var authToken: String?
-    
-    //MARK: Function's
-    func fetchOAuthToken(code: String,  completion: @escaping (Result<String, Error>) -> Void) {
+    func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
-        guard lastCode != code else {
-            completion(.failure(AuthServiceError.invalidRequest))
-            return
-        }
-
         task?.cancel()
-        lastCode = code
-        
-        guard let request = makeRequest(code: code) else {
-            completion(.failure(NSError(domain: "OAuth2Services", code: -1, userInfo: [NSLocalizedDescriptionKey : "Не валидный реквест"])))
+                
+        guard let request = makeUserProfileRequest(username: username) else {
+            completion(.failure(NSError(domain: "ProfileService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Ошибка создания запроса"])))
             return
         }
         
         let task = URLSession.shared.data(for: request) { result in
             DispatchQueue.main.async {
                 
-            
                 switch result {
                 case .success(let data):
                     
@@ -48,16 +34,12 @@ final class OAuth2Service {
                     do {
                         let decoder = JSONDecoder()
                         decoder.keyDecodingStrategy = .convertFromSnakeCase
-                        let tokenResponse = try decoder.decode(OAuthTokenResponseBody.self, from: data)
-                        OAuth2TokenStorage.shared.token = tokenResponse.accessToken
-                        
-                        
-                        completion(.success(tokenResponse.accessToken))
-                        
+                        let profileImageResult = try decoder.decode(UserResult.self, from: data)
+                        let avatarURL = profileImageResult.profileImage.small
+                        self.avatarURL = avatarURL
+                        completion(.success(avatarURL))
                     } catch {
-                        DispatchQueue.main.async {
-                            completion(.failure(error))
-                        }
+                        completion(.failure(error))
                         print("Ошибка декодирования")
                     }
                 case .failure(let error):
@@ -65,14 +47,6 @@ final class OAuth2Service {
                         switch error {
                         case .httpStatusCode(let statusCode):
                             print("Ошибка сервера: \(statusCode)")
-                            
-                            if statusCode == 400, let token = OAuth2TokenStorage.shared.token {
-                                print("Несмотря на 400, токен уже сохранён: \(token)")
-                                DispatchQueue.main.async {
-                                    completion(.success(token))
-                                }
-                                return
-                            }
                             
                             let statusError = NSError(domain: "HTTPError",
                                                       code: statusCode,
@@ -112,33 +86,15 @@ final class OAuth2Service {
         task.resume()
     }
     
-    private func makeRequest(code: String) -> URLRequest? {
-        let baseUrl = Constants.defaultBaseURL?.appendingPathComponent("oauth/token")
-        guard let baseUrl else {
+    private func makeUserProfileRequest(username: String) -> URLRequest? {
+        guard let baseUrl = Constants.defaultAPIBaseURL?.appendingPathComponent("users/\(username)") else {
             print("Ошибка: невозможно создать baseURL")
             return nil
         }
         
-        guard var urlComponents = URLComponents(url: baseUrl, resolvingAgainstBaseURL: false) else {
-            print("Ошибка: не удалось создать URLComponents из \(baseUrl)")
-            return nil
-        }
-        
-        urlComponents.queryItems = [
-            URLQueryItem(name: "client_id", value: Constants.accessKey),
-            URLQueryItem(name: "client_secret", value: Constants.secretKey),
-            URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
-            URLQueryItem(name: "grant_type", value: "authorization_code"),
-            URLQueryItem(name: "code", value: code)
-        ]
-        
-        guard let url = urlComponents.url else {
-            print("Ошибка: не удалось получить URL из URLComponents: \(urlComponents)")
-            return nil
-        }
-        
-        var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = "POST"
+        var urlRequest = URLRequest(url: baseUrl)
+        urlRequest.httpMethod = "GET"
+        urlRequest.setValue("Bearer \(OAuth2TokenStorage.shared.token ?? "")", forHTTPHeaderField: "Authorization")
         return urlRequest
     }
 }

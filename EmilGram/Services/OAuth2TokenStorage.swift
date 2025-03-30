@@ -5,7 +5,7 @@ final class OAuth2TokenStorage {
     private init() {}
     
     private let userDefaults = UserDefaults.standard
-    private let tokenKey = "token"
+    let tokenKey = "token"
     
     var token : String? {
         get {

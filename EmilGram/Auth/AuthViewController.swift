@@ -1,5 +1,5 @@
 import UIKit
-
+import ProgressHUD
 final class AuthViewController: UIViewController {
     //MARK: - Properties
     private let oAuth2Service = OAuth2Service.shared
@@ -73,12 +73,17 @@ final class AuthViewController: UIViewController {
     }
 }
 
+// MARK: Extension's and Protocol's
+
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         vc.dismiss(animated: true)
+        
+        UIBlockingProgressHUD.show()
         oAuth2Service.fetchOAuthToken(code: code, completion: { result in
             switch result {
             case .success(let token):
+                UIBlockingProgressHUD.dismiss()
                 print("Токен получен и сохранен: \(token)")
                 
                 
@@ -86,6 +91,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
                 self.dismiss(animated: true)
                 
             case .failure(let error):
+                UIBlockingProgressHUD.dismiss()
                 print("Ошибка получения токена: \(error)")
             }
         })

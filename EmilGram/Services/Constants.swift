@@ -6,5 +6,6 @@ enum Constants {
     
     static let accessScope: String = "public+read_user+write_likes"
     
-    static let defaultBaseURL = URL(string: "https://api.unsplash.com") ?? nil
+    static let defaultBaseURL = URL(string: "https://unsplash.com/") ?? nil
+    static let defaultAPIBaseURL = URL(string: "https://api.unsplash.com/") ?? nil
 }

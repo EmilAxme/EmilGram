@@ -1,6 +1,8 @@
 import UIKit
 
 final class ProfileViewController: UIViewController{
+    private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
     // MARK: - View Properties
     private lazy var nameLabel: UILabel = {
         let nameLabel = createLabel(
@@ -43,10 +45,21 @@ final class ProfileViewController: UIViewController{
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        guard let profile = profileService.profile else { return }
+        
+        updateProfileDetails(profile: profile)
         setupUI()
     }
     
     // MARK: - Setup UI
+    private func updateProfileDetails(profile: Profile) {
+        nameLabel.text = profile.name
+        descriptionLabel.text = profile.bio
+        userIDLabel.text = profile.loginName
+    }
+    
+    
+    
     private func setupUI() {
         let labelsStackView = UIStackView(arrangedSubviews: [nameLabel, userIDLabel, descriptionLabel])
         labelsStackView.axis = .vertical

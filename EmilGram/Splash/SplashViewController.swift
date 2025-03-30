@@ -1,15 +1,19 @@
 import UIKit
 
 final class SplashViewController: UIViewController {
-    
+    //MARK: Properties
     let showAuthenticationScreenSegueIdentifier = "showAuth"
     
     private let oAuth2TokenStorage = OAuth2TokenStorage.shared
     private let oAuth2Service = OAuth2Service.shared
+    private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
     
+    //MARK: Override function
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
+        guard let token = oAuth2TokenStorage.token else { return }
+        fetchProfile(token)
         // Проверяем, есть ли токен в UserDefaults
         let savedToken = oAuth2TokenStorage.token
         
@@ -22,6 +26,7 @@ final class SplashViewController: UIViewController {
         }
     }
     
+    // MARK: Private function's
     private func switchToTabBarController() {
         guard let window = UIApplication.shared.windows.first else {
             assertionFailure("Invalid window configuration")
@@ -33,6 +38,7 @@ final class SplashViewController: UIViewController {
     }
 }
 
+//MARK: Extensions
 extension SplashViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showAuthenticationScreenSegueIdentifier {
@@ -49,6 +55,33 @@ extension SplashViewController {
         } else {
             super.prepare(for: segue, sender: sender)
            }
+    }
+}
+
+extension SplashViewController {
+    func didAuthenticate(_ vc: AuthViewController) {
+        vc.dismiss(animated: true)
+       
+        guard let token = oAuth2TokenStorage.token else {
+            return
+        }
+        fetchProfile(token)
+    }
+
+    private func fetchProfile(_ token: String) {
+        UIBlockingProgressHUD.show()
+        profileService.fetchProfile(token) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
+            guard let self = self else { return }
+
+            switch result {
+            case .success(let profile):
+                ProfileImageService.shared.fetchProfileImageURL(username: profile.username) { _ in }
+                self.switchToTabBarController()
+            case .failure:
+                print("Ошибка получения профиля")
+            }
+        }
     }
 }
 

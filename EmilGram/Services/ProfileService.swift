@@ -1,41 +1,40 @@
 import Foundation
 
-enum AuthServiceError: Error {
-    case invalidRequest
-}
-
-final class OAuth2Service {
+final class ProfileService {
     
-    //MARK: Properties
-    static let shared = OAuth2Service()
+    static let shared = ProfileService()
     private init() {}
     
-    private let urlSession = URLSession.shared
+    private(set) var profile: Profile?
+    
     private var task: URLSessionTask?
-    private var lastCode: String?
+    private var lastToken: String?
     
-    private var authToken: String?
+    private enum profileResultsConstants {
+        static let unsplashGetProfileResultsURLString = "https://api.unsplash.com/me"
+    }
+
     
-    //MARK: Function's
-    func fetchOAuthToken(code: String,  completion: @escaping (Result<String, Error>) -> Void) {
+    func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
         assert(Thread.isMainThread)
-        guard lastCode != code else {
+        task?.cancel()
+                
+        guard lastToken != token else {
             completion(.failure(AuthServiceError.invalidRequest))
             return
         }
 
         task?.cancel()
-        lastCode = code
+        lastToken = token
         
-        guard let request = makeRequest(code: code) else {
-            completion(.failure(NSError(domain: "OAuth2Services", code: -1, userInfo: [NSLocalizedDescriptionKey : "Не валидный реквест"])))
+        guard let request = makeUserProfileRequest() else {
+            completion(.failure(NSError(domain: "ProfileService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Ошибка создания запроса"])))
             return
         }
         
         let task = URLSession.shared.data(for: request) { result in
             DispatchQueue.main.async {
                 
-            
                 switch result {
                 case .success(let data):
                     
@@ -48,11 +47,10 @@ final class OAuth2Service {
                     do {
                         let decoder = JSONDecoder()
                         decoder.keyDecodingStrategy = .convertFromSnakeCase
-                        let tokenResponse = try decoder.decode(OAuthTokenResponseBody.self, from: data)
-                        OAuth2TokenStorage.shared.token = tokenResponse.accessToken
-                        
-                        
-                        completion(.success(tokenResponse.accessToken))
+                        let profileResult = try decoder.decode(ProfileResponseResult.self, from: data)
+                        let profile = Profile(from: profileResult)
+                        self.profile = profile
+                        completion(.success(profile))
                         
                     } catch {
                         DispatchQueue.main.async {
@@ -65,14 +63,6 @@ final class OAuth2Service {
                         switch error {
                         case .httpStatusCode(let statusCode):
                             print("Ошибка сервера: \(statusCode)")
-                            
-                            if statusCode == 400, let token = OAuth2TokenStorage.shared.token {
-                                print("Несмотря на 400, токен уже сохранён: \(token)")
-                                DispatchQueue.main.async {
-                                    completion(.success(token))
-                                }
-                                return
-                            }
                             
                             let statusError = NSError(domain: "HTTPError",
                                                       code: statusCode,
@@ -107,38 +97,23 @@ final class OAuth2Service {
                     }
                 }
             }
+            self.task = nil
+            self.lastToken = nil
         }
         self.task = task
         task.resume()
     }
     
-    private func makeRequest(code: String) -> URLRequest? {
-        let baseUrl = Constants.defaultBaseURL?.appendingPathComponent("oauth/token")
+    private func makeUserProfileRequest() -> URLRequest? {
+        let baseUrl = Constants.defaultAPIBaseURL?.appendingPathComponent("me")
         guard let baseUrl else {
             print("Ошибка: невозможно создать baseURL")
             return nil
         }
         
-        guard var urlComponents = URLComponents(url: baseUrl, resolvingAgainstBaseURL: false) else {
-            print("Ошибка: не удалось создать URLComponents из \(baseUrl)")
-            return nil
-        }
-        
-        urlComponents.queryItems = [
-            URLQueryItem(name: "client_id", value: Constants.accessKey),
-            URLQueryItem(name: "client_secret", value: Constants.secretKey),
-            URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
-            URLQueryItem(name: "grant_type", value: "authorization_code"),
-            URLQueryItem(name: "code", value: code)
-        ]
-        
-        guard let url = urlComponents.url else {
-            print("Ошибка: не удалось получить URL из URLComponents: \(urlComponents)")
-            return nil
-        }
-        
-        var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = "POST"
+        var urlRequest = URLRequest(url: baseUrl)
+        urlRequest.httpMethod = "GET"
+        urlRequest.setValue("Bearer \(OAuth2TokenStorage.shared.token ?? "asd")", forHTTPHeaderField: "Authorization")
         return urlRequest
     }
 }
