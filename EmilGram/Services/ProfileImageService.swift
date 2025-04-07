@@ -1,8 +1,10 @@
 import Foundation
  
 final class ProfileImageService {
+    static let didChangeNotification = Notification.Name("ProfileImageProviderDidChange")
     static let shared = ProfileImageService()
     private init() {}
+    
     
     private(set) var avatarURL: String?
     
@@ -38,6 +40,10 @@ final class ProfileImageService {
                         let avatarURL = profileImageResult.profileImage.small
                         self.avatarURL = avatarURL
                         completion(.success(avatarURL))
+                        NotificationCenter.default.post(
+                            name: ProfileImageService.didChangeNotification,
+                            object: self,
+                            userInfo: ["URL": avatarURL])
                     } catch {
                         completion(.failure(error))
                         print("Ошибка декодирования")

@@ -3,6 +3,7 @@ import UIKit
 final class ProfileViewController: UIViewController{
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
+    private var profileImageServiceObserver: NSObjectProtocol?
     // MARK: - View Properties
     private lazy var nameLabel: UILabel = {
         let nameLabel = createLabel(
@@ -45,13 +46,29 @@ final class ProfileViewController: UIViewController{
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        guard let profile = profileService.profile else { return }
         
+        profileImageServiceObserver = NotificationCenter.default.addObserver(
+            forName: ProfileImageService.didChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            guard let self else { return }
+            self.updateAvatar()
+        }
+        guard let profile = profileService.profile else { return }
         updateProfileDetails(profile: profile)
         setupUI()
     }
     
     // MARK: - Setup UI
+    private func updateAvatar() {
+        guard
+            let profileImageURL = ProfileImageService.shared.avatarURL,
+            let url = URL(string: profileImageURL)
+        else { return }
+        // TODO [Sprint 11] Обновить аватар, используя Kingfisher
+    }
+    
     private func updateProfileDetails(profile: Profile) {
         nameLabel.text = profile.name
         descriptionLabel.text = profile.bio
