@@ -17,7 +17,7 @@ final class OAuth2Service {
     private var authToken: String?
     
     //MARK: Function's
-    func fetchOAuthToken(code: String,  completion: @escaping (Result<String, Error>) -> Void) {
+    func fetchOAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
         guard lastCode != code else {
             completion(.failure(AuthServiceError.invalidRequest))
@@ -26,88 +26,30 @@ final class OAuth2Service {
 
         task?.cancel()
         lastCode = code
-        
+
         guard let request = makeRequest(code: code) else {
             completion(.failure(NSError(domain: "OAuth2Services", code: -1, userInfo: [NSLocalizedDescriptionKey : "Не валидный реквест"])))
             return
         }
-        
-        let task = URLSession.shared.data(for: request) { result in
-            DispatchQueue.main.async {
-                
+
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
+            guard let self = self else { return }
             
-                switch result {
-                case .success(let data):
-                    
-                    if let jsonString = String(data: data, encoding: .utf8) {
-                        print("Ответ сервера: \(jsonString)")
-                    } else {
-                        print("Ответ сервера не удалось преобразовать в строку")
-                    }
-                    
-                    do {
-                        let decoder = JSONDecoder()
-                        decoder.keyDecodingStrategy = .convertFromSnakeCase
-                        let tokenResponse = try decoder.decode(OAuthTokenResponseBody.self, from: data)
-                        OAuth2TokenStorage.shared.token = tokenResponse.accessToken
-                        
-                        
-                        completion(.success(tokenResponse.accessToken))
-                        
-                    } catch {
-                        DispatchQueue.main.async {
-                            completion(.failure(error))
-                        }
-                        print("Ошибка декодирования")
-                    }
-                case .failure(let error):
-                    if let error = error as? NetworkError {
-                        switch error {
-                        case .httpStatusCode(let statusCode):
-                            print("Ошибка сервера: \(statusCode)")
-                            
-                            if statusCode == 400, let token = OAuth2TokenStorage.shared.token {
-                                print("Несмотря на 400, токен уже сохранён: \(token)")
-                                DispatchQueue.main.async {
-                                    completion(.success(token))
-                                }
-                                return
-                            }
-                            
-                            let statusError = NSError(domain: "HTTPError",
-                                                      code: statusCode,
-                                                      userInfo: [NSLocalizedDescriptionKey: "Ошибка сервера: \(statusCode)"])
-                            DispatchQueue.main.async {
-                                completion(.failure(statusError))
-                            }
-                            
-                        case .urlRequestError(let requestError):
-                            print("Сетевая ошибка: \(requestError.localizedDescription)")
-                            
-                            DispatchQueue.main.async {
-                                completion(.failure(requestError))
-                            }
-                            
-                        case .urlSessionError:
-                            let noDataError = NSError(domain: "No data",
-                                                      code: -1,
-                                                      userInfo: [NSLocalizedDescriptionKey: "Нет данных в ответе"])
-                            print("Нет данных в ответе")
-                            
-                            DispatchQueue.main.async {
-                                completion(.failure(noDataError))
-                            }
-                        }
-                    } else {
-                        print("Неизвестная ошибка: \(error.localizedDescription)")
-                        
-                        DispatchQueue.main.async {
-                            completion(.failure(error))
-                        }
-                    }
+            switch result {
+            case .success(let tokenResponse):
+                OAuth2TokenStorage.shared.token = tokenResponse.accessToken
+                completion(.success(tokenResponse.accessToken))
+
+            case .failure(let error):
+                if let error = error as? NetworkError {
+                    handleNetworkError(error, service: "[OAuth2Service.fetchOAuthToken]", fallbackToken: OAuth2TokenStorage.shared.token, completion: completion)
+                } else {
+                    print("[OAuth2Service.fetchOAuthToken]: Error - Неизвестная ошибка: \(error.localizedDescription)")
+                    completion(.failure(error))
                 }
             }
         }
+
         self.task = task
         task.resume()
     }

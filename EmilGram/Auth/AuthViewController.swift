@@ -3,6 +3,8 @@ import ProgressHUD
 final class AuthViewController: UIViewController {
     //MARK: - Properties
     private let oAuth2Service = OAuth2Service.shared
+    private var alert: AlertPresenter?
+
     weak var delegate: AuthViewControllerDelegate?
     
     //MARK: - View's
@@ -21,6 +23,9 @@ final class AuthViewController: UIViewController {
         view.backgroundColor = UIColor(named: "YP Black (iOS)")
         setupUI()
         configureBackButton()
+        
+        alert = AlertPresenter(delegate: self)
+        
         super.viewDidLoad()
     }
     
@@ -71,6 +76,16 @@ final class AuthViewController: UIViewController {
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         navigationItem.backBarButtonItem?.tintColor = .black
     }
+    
+    private func makeErrorAlert(title: String, message: String?, buttonText: String) {
+        let errorAlert = AlertModel(title: title,
+                                    message: message,
+                                    buttonText: buttonText)
+        
+        guard let alert else { return }
+        
+        alert.presentAlert(with: errorAlert)
+    }
 }
 
 // MARK: Extension's and Protocol's
@@ -92,6 +107,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
                 
             case .failure(let error):
                 UIBlockingProgressHUD.dismiss()
+                self.makeErrorAlert(title: "Что-то пошло не так", message: "Не удалось войти в систему", buttonText: "Ок")
                 print("Ошибка получения токена: \(error)")
             }
         })
@@ -107,3 +123,4 @@ extension AuthViewController: WebViewViewControllerDelegate {
 protocol AuthViewControllerDelegate: AnyObject {
     func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String)
 }
+

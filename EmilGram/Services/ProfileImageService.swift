@@ -21,22 +21,12 @@ final class ProfileImageService {
             return
         }
         
-        let task = URLSession.shared.data(for: request) { result in
+        let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<UserResult, Error>) in
             DispatchQueue.main.async {
+                guard let self = self else { return }
                 
                 switch result {
-                case .success(let data):
-                    
-                    if let jsonString = String(data: data, encoding: .utf8) {
-                        print("Ответ сервера: \(jsonString)")
-                    } else {
-                        print("Ответ сервера не удалось преобразовать в строку")
-                    }
-                    
-                    do {
-                        let decoder = JSONDecoder()
-                        decoder.keyDecodingStrategy = .convertFromSnakeCase
-                        let profileImageResult = try decoder.decode(UserResult.self, from: data)
+                case .success(let profileImageResult):
                         let avatarURL = profileImageResult.profileImage.small
                         self.avatarURL = avatarURL
                         completion(.success(avatarURL))
@@ -44,46 +34,12 @@ final class ProfileImageService {
                             name: ProfileImageService.didChangeNotification,
                             object: self,
                             userInfo: ["URL": avatarURL])
-                    } catch {
-                        completion(.failure(error))
-                        print("Ошибка декодирования")
-                    }
                 case .failure(let error):
                     if let error = error as? NetworkError {
-                        switch error {
-                        case .httpStatusCode(let statusCode):
-                            print("Ошибка сервера: \(statusCode)")
-                            
-                            let statusError = NSError(domain: "HTTPError",
-                                                      code: statusCode,
-                                                      userInfo: [NSLocalizedDescriptionKey: "Ошибка сервера: \(statusCode)"])
-                            DispatchQueue.main.async {
-                                completion(.failure(statusError))
-                            }
-                            
-                        case .urlRequestError(let requestError):
-                            print("Сетевая ошибка: \(requestError.localizedDescription)")
-                            
-                            DispatchQueue.main.async {
-                                completion(.failure(requestError))
-                            }
-                            
-                        case .urlSessionError:
-                            let noDataError = NSError(domain: "No data",
-                                                      code: -1,
-                                                      userInfo: [NSLocalizedDescriptionKey: "Нет данных в ответе"])
-                            print("Нет данных в ответе")
-                            
-                            DispatchQueue.main.async {
-                                completion(.failure(noDataError))
-                            }
-                        }
+                        handleNetworkError(error, service: "[ProfileImageService.fetchProfileImageURL]", completion: completion)
                     } else {
-                        print("Неизвестная ошибка: \(error.localizedDescription)")
-                        
-                        DispatchQueue.main.async {
-                            completion(.failure(error))
-                        }
+                        print("[ProfileImageService.fetchProfileImageURL]: Error - Неизвестная ошибка: \(error.localizedDescription)")
+                        completion(.failure(error))
                     }
                 }
             }
