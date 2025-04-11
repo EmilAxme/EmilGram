@@ -35,12 +35,11 @@ final class ProfileService {
         let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<ProfileResponseResult, Error>) in
             guard let self = self else { return }
             DispatchQueue.main.async {
-                
                 switch result {
                 case .success(let profileResult):
-                        let profile = Profile(from: profileResult)
-                        self.profile = profile
-                        completion(.success(profile))
+                    let profile = Profile(from: profileResult)
+                    self.profile = profile
+                    completion(.success(profile))
                 case .failure(let error):
                     if let error = error as? NetworkError {
                         handleNetworkError(error, service: "[ProfileService.fetchOAuthToken]", completion: completion)

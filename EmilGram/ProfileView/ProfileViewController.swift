@@ -1,4 +1,5 @@
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController{
     private let profileService = ProfileService.shared
@@ -30,9 +31,7 @@ final class ProfileViewController: UIViewController{
         return descriptionLabel
     }()
     private lazy var profileImageView: UIImageView = {
-        let profileImage = UIImage(named: "profilePhoto")
         let profileImageView = createImageView()
-        profileImageView.image = profileImage
         return profileImageView
     }()
     private lazy var logOutButton: UIButton = {
@@ -58,6 +57,7 @@ final class ProfileViewController: UIViewController{
         guard let profile = profileService.profile else { return }
         updateProfileDetails(profile: profile)
         setupUI()
+        updateAvatar()
     }
     
     // MARK: - Setup UI
@@ -66,6 +66,8 @@ final class ProfileViewController: UIViewController{
             let profileImageURL = ProfileImageService.shared.avatarURL,
             let url = URL(string: profileImageURL)
         else { return }
+        let processor = RoundCornerImageProcessor(cornerRadius: 50)
+        profileImageView.kf.setImage(with: url, options: [.processor(processor)])
         // TODO [Sprint 11] Обновить аватар, используя Kingfisher
     }
     

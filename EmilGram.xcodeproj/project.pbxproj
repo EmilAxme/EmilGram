@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		20D171D52DA8178900EEF4FA /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 20D171D42DA8178900EEF4FA /* Kingfisher */; };
+		20D171D82DA824CE00EEF4FA /* SwiftKeychainWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 20D171D72DA824CE00EEF4FA /* SwiftKeychainWrapper */; };
 		20E6B23D2D8EE6D000BE931A /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 20E6B23C2D8EE6D000BE931A /* ProgressHUD */; };
 /* End PBXBuildFile section */
 
@@ -69,7 +71,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				20D171D52DA8178900EEF4FA /* Kingfisher in Frameworks */,
 				20E6B23D2D8EE6D000BE931A /* ProgressHUD in Frameworks */,
+				20D171D82DA824CE00EEF4FA /* SwiftKeychainWrapper in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -131,6 +135,8 @@
 			name = EmilGram;
 			packageProductDependencies = (
 				20E6B23C2D8EE6D000BE931A /* ProgressHUD */,
+				20D171D42DA8178900EEF4FA /* Kingfisher */,
+				20D171D72DA824CE00EEF4FA /* SwiftKeychainWrapper */,
 			);
 			productName = EmilGram;
 			productReference = 2015EEE32D453C1300C8D39D /* EmilGram.app */;
@@ -216,6 +222,8 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				20E6B23B2D8EE6D000BE931A /* XCRemoteSwiftPackageReference "ProgressHUD" */,
+				20D171D32DA8178900EEF4FA /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				20D171D62DA824CE00EEF4FA /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 2015EEE42D453C1300C8D39D /* Products */;
@@ -588,6 +596,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		20D171D32DA8178900EEF4FA /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = exactVersion;
+				version = 8.3.2;
+			};
+		};
+		20D171D62DA824CE00EEF4FA /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jrendel/SwiftKeychainWrapper";
+			requirement = {
+				kind = exactVersion;
+				version = 4.0.1;
+			};
+		};
 		20E6B23B2D8EE6D000BE931A /* XCRemoteSwiftPackageReference "ProgressHUD" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/relatedcode/ProgressHUD";
@@ -599,6 +623,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		20D171D42DA8178900EEF4FA /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 20D171D32DA8178900EEF4FA /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+		20D171D72DA824CE00EEF4FA /* SwiftKeychainWrapper */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 20D171D62DA824CE00EEF4FA /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */;
+			productName = SwiftKeychainWrapper;
+		};
 		20E6B23C2D8EE6D000BE931A /* ProgressHUD */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 20E6B23B2D8EE6D000BE931A /* XCRemoteSwiftPackageReference "ProgressHUD" */;

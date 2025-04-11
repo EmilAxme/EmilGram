@@ -12,15 +12,19 @@ final class SplashViewController: UIViewController {
     //MARK: Override function
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        guard let token = oAuth2TokenStorage.token else { return }
-        fetchProfile(token)
+        if let token = oAuth2TokenStorage.token {
+            print(token)
+            fetchProfile(token)
+        } else {
+            print("Нет токена")
+        }
         // Проверяем, есть ли токен в UserDefaults
         let savedToken = oAuth2TokenStorage.token
         
         print("Токен в UserDefaults: \(savedToken ?? "нет токена")")
 
         if savedToken != nil {
-            switchToTabBarController()
+//            switchToTabBarController()
         } else {
             performSegue(withIdentifier: showAuthenticationScreenSegueIdentifier, sender: nil)
         }
@@ -73,10 +77,19 @@ extension SplashViewController {
         profileService.fetchProfile(token) { [weak self] result in
             UIBlockingProgressHUD.dismiss()
             guard let self = self else { return }
+            
 
             switch result {
             case .success(let profile):
-                ProfileImageService.shared.fetchProfileImageURL(username: profile.username) { _ in }
+
+                profileImageService.fetchProfileImageURL(username: profile.username) { result in
+                    switch result {
+                    case .success(let url):
+                        print("URL аватарки: \(url)")
+                    case .failure(let error):
+                        print("Не удалось получить URL аватарки: \(error.localizedDescription)")
+                    }
+                }
                 self.switchToTabBarController()
             case .failure:
                 print("Ошибка получения профиля")

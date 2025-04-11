@@ -27,13 +27,13 @@ final class ProfileImageService {
                 
                 switch result {
                 case .success(let profileImageResult):
-                        let avatarURL = profileImageResult.profileImage.small
-                        self.avatarURL = avatarURL
-                        completion(.success(avatarURL))
-                        NotificationCenter.default.post(
-                            name: ProfileImageService.didChangeNotification,
-                            object: self,
-                            userInfo: ["URL": avatarURL])
+                    let avatarURL = profileImageResult.profileImage.small
+                    self.avatarURL = avatarURL
+                    completion(.success(avatarURL))
+                    NotificationCenter.default.post(
+                        name: ProfileImageService.didChangeNotification,
+                        object: self,
+                        userInfo: ["URL": avatarURL])
                 case .failure(let error):
                     if let error = error as? NetworkError {
                         handleNetworkError(error, service: "[ProfileImageService.fetchProfileImageURL]", completion: completion)

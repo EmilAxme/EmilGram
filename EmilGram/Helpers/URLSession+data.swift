@@ -47,6 +47,15 @@ extension URLSession {
             switch result {
             case .success(let data):
                 do {
+                    let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
+                    let prettyData = try JSONSerialization.data(withJSONObject: jsonObject, options: [.prettyPrinted])
+                    print(prettyData)
+                           
+                    if let prettyString = String(data: prettyData, encoding: .utf8) {
+                        print(prettyString)
+                    } else {
+                        print("❌ Не удалось преобразовать отформатированный JSON в строку")
+                    }
                     decoder.keyDecodingStrategy = .convertFromSnakeCase
                     let object = try decoder.decode(T.self, from: data)
                     completion(.success(object))
