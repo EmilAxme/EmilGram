@@ -176,22 +176,6 @@
             </objects>
             <point key="canvasLocation" x="1094.0298507462685" y="-36.384439359267731"/>
         </scene>
-        <!--Profile View Controller-->
-        <scene sceneID="sRq-cd-qck">
-            <objects>
-                <viewController storyboardIdentifier="ProfileViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="jj0-KJ-RlP" customClass="ProfileViewController" customModule="EmilGram" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Uys-bE-ccg">
-                        <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="Nfk-V0-zdR"/>
-                        <color key="backgroundColor" name="YP Black (iOS)"/>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="" image="tab_profile_active" selectedImage="tab_profile_active" id="t6e-FM-AUd"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="TJU-jW-Ii1" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1835.8208955223879" y="-35.697940503432491"/>
-        </scene>
         <!--Web View View Controller-->
         <scene sceneID="Uas-w2-Izz">
             <objects>
@@ -306,7 +290,6 @@
         <image name="Vector" width="75" height="78"/>
         <image name="shareButton" width="51" height="51"/>
         <image name="tab_editorial_active" width="30" height="30"/>
-        <image name="tab_profile_active" width="75" height="49"/>
         <namedColor name="YP Black (iOS)">
             <color red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

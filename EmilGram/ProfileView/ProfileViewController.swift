@@ -80,6 +80,7 @@ final class ProfileViewController: UIViewController{
     
     
     private func setupUI() {
+        view.backgroundColor = UIColor(named: "YP Black (iOS)")
         let labelsStackView = UIStackView(arrangedSubviews: [nameLabel, userIDLabel, descriptionLabel])
         labelsStackView.axis = .vertical
         labelsStackView.spacing = 8
