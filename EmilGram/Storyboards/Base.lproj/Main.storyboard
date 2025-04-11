@@ -40,7 +40,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="VzN-xF-rT5">
             <objects>
-                <tabBarController storyboardIdentifier="TabBarViewController" id="nm6-VQ-cZw" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="TabBarViewController" id="nm6-VQ-cZw" customClass="TabBarController" customModule="EmilGram" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="iOp-Ig-VtH"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="eAf-1S-nsW">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="49"/>
@@ -90,7 +90,7 @@
         <!--ImageList-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="ImagesListViewController" title="ImageList" id="BYZ-38-t0r" customClass="ImagesListViewController" customModule="EmilGram" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ImagesListViewController" title="ImageList" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="ImagesListViewController" customModule="EmilGram" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -179,7 +179,7 @@
         <!--Profile View Controller-->
         <scene sceneID="sRq-cd-qck">
             <objects>
-                <viewController storyboardIdentifier="ProfileViewController" id="jj0-KJ-RlP" customClass="ProfileViewController" customModule="EmilGram" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ProfileViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="jj0-KJ-RlP" customClass="ProfileViewController" customModule="EmilGram" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Uys-bE-ccg">
                         <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
