@@ -52,10 +52,6 @@
                             <color key="backgroundColor" name="YP Black (iOS)"/>
                         </tabBarAppearance>
                     </tabBar>
-                    <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="pVm-cX-jze"/>
-                        <segue destination="jj0-KJ-RlP" kind="relationship" relationship="viewControllers" id="BQZ-jT-BUs"/>
-                    </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Mj5-LG-IgX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
