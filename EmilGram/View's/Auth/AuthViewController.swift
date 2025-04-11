@@ -20,6 +20,7 @@ final class AuthViewController: UIViewController {
     
     // MARK: - Override function's
     override func viewDidLoad() {
+        view.inputViewController?.modalPresentationStyle = .fullScreen
         view.backgroundColor = UIColor(named: "YP Black (iOS)")
         setupUI()
         configureBackButton()
@@ -79,7 +80,7 @@ final class AuthViewController: UIViewController {
     
     private func makeErrorAlert(title: String, message: String?, buttonText: String) {
         let errorAlert = AlertModel(title: title,
-                                    message: message,
+                                    message: message ?? nil,
                                     buttonText: buttonText)
         
         guard let alert else { return }
@@ -88,7 +89,7 @@ final class AuthViewController: UIViewController {
     }
 }
 
-// MARK: Extension's and Protocol's
+// MARK: - Extension's and Protocol's
 
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {

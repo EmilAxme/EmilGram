@@ -1,11 +1,13 @@
 import Foundation
 
+// MARK: - ENUM
 enum NetworkError: Error {
     case httpStatusCode(Int)
     case urlRequestError(Error)
     case urlSessionError
 }
 
+// MARK: - Extension's
 extension URLSession {
     func data(
         for request: URLRequest,
@@ -73,7 +75,7 @@ extension URLSession {
     }
 }
 
-
+// MARK: - Handle function
 func handleNetworkError<T>(
     _ error: NetworkError,
     service: String,

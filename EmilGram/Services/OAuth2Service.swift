@@ -6,7 +6,7 @@ enum AuthServiceError: Error {
 
 final class OAuth2Service {
     
-    //MARK: Properties
+    //MARK: - Properties
     static let shared = OAuth2Service()
     private init() {}
     
@@ -16,7 +16,7 @@ final class OAuth2Service {
     
     private var authToken: String?
     
-    //MARK: Function's
+    //MARK: - Function's
     func fetchOAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
         guard lastCode != code else {
@@ -32,8 +32,7 @@ final class OAuth2Service {
             return
         }
 
-        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
-            guard let self = self else { return }
+        let task = urlSession.objectTask(for: request) { (result: Result<OAuthTokenResponseBody, Error>) in
             
             switch result {
             case .success(let tokenResponse):

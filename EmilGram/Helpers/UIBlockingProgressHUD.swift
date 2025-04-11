@@ -2,6 +2,8 @@ import UIKit
 import ProgressHUD
 
 final class UIBlockingProgressHUD {
+    // MARK: - Static function's/property
+
     private static var window: UIWindow? {
         return UIApplication.shared.windows.first
     }

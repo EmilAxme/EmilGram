@@ -1,20 +1,23 @@
 import Foundation
 
 final class ProfileService {
-    
+    //MARK: - Singleton
     static let shared = ProfileService()
     private init() {}
     
+    //MARK: - Set var
     private(set) var profile: Profile?
     
+    //MARK: - Properties
     private var task: URLSessionTask?
     private var lastToken: String?
     
+    //MARK: - ENUM
     private enum profileResultsConstants {
         static let unsplashGetProfileResultsURLString = "https://api.unsplash.com/me"
     }
 
-    
+    //MARK: - Functions
     func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
         assert(Thread.isMainThread)
         task?.cancel()
