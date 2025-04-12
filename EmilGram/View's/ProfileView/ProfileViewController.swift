@@ -68,7 +68,6 @@ final class ProfileViewController: UIViewController{
         else { return }
         let processor = RoundCornerImageProcessor(cornerRadius: 50)
         profileImageView.kf.setImage(with: url, options: [.processor(processor)])
-        // TODO [Sprint 11] Обновить аватар, используя Kingfisher
     }
     
     private func updateProfileDetails(profile: Profile) {

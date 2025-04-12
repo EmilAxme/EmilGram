@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Profile {
+struct Profile {
     // MARK: - Public Properties
     var username: String
     var name: String

@@ -44,7 +44,7 @@
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" title="Button"/>
                                 <connections>
-                                    <segue destination="zhk-9p-Mfd" kind="show" identifier="ShowWebView" id="iCh-pz-96h"/>
+                                    <segue destination="zhk-9p-Mfd" kind="presentation" identifier="ShowWebView" modalPresentationStyle="overFullScreen" id="iCh-pz-96h"/>
                                 </connections>
                             </button>
                         </subviews>

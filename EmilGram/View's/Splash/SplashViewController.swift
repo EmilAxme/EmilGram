@@ -17,10 +17,13 @@ final class SplashViewController: UIViewController {
     private let profileImageService = ProfileImageService.shared
     
     //MARK: - Override function
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = UIColor(named: "YP Black (iOS)")
+    }
     override func viewDidAppear(_ animated: Bool) {
-        alert = AlertPresenter(delegate: self)
         super.viewDidAppear(animated)
-        view.backgroundColor = UIColor(named: "YP Black (IOS)")
+        alert = AlertPresenter(delegate: self)
 
         setupUI()
         if let token = oAuth2TokenStorage.token {
