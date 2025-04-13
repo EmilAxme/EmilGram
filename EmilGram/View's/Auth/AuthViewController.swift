@@ -1,8 +1,10 @@
 import UIKit
-
+import ProgressHUD
 final class AuthViewController: UIViewController {
     //MARK: - Properties
     private let oAuth2Service = OAuth2Service.shared
+    private var alert: AlertPresenter?
+
     weak var delegate: AuthViewControllerDelegate?
     
     //MARK: - View's
@@ -18,9 +20,13 @@ final class AuthViewController: UIViewController {
     
     // MARK: - Override function's
     override func viewDidLoad() {
+        view.inputViewController?.modalPresentationStyle = .fullScreen
         view.backgroundColor = UIColor(named: "YP Black (iOS)")
         setupUI()
         configureBackButton()
+        
+        alert = AlertPresenter(delegate: self)
+        
         super.viewDidLoad()
     }
     
@@ -71,14 +77,29 @@ final class AuthViewController: UIViewController {
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         navigationItem.backBarButtonItem?.tintColor = .black
     }
+    
+    private func makeErrorAlert(title: String, message: String?, buttonText: String) {
+        let errorAlert = AlertModel(title: title,
+                                    message: message ?? nil,
+                                    buttonText: buttonText)
+        
+        guard let alert else { return }
+        
+        alert.presentAlert(with: errorAlert)
+    }
 }
+
+// MARK: - Extension's and Protocol's
 
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         vc.dismiss(animated: true)
+        
+        UIBlockingProgressHUD.show()
         oAuth2Service.fetchOAuthToken(code: code, completion: { result in
             switch result {
             case .success(let token):
+                UIBlockingProgressHUD.dismiss()
                 print("Токен получен и сохранен: \(token)")
                 
                 
@@ -86,6 +107,8 @@ extension AuthViewController: WebViewViewControllerDelegate {
                 self.dismiss(animated: true)
                 
             case .failure(let error):
+                UIBlockingProgressHUD.dismiss()
+                self.makeErrorAlert(title: "Что-то пошло не так", message: "Не удалось войти в систему", buttonText: "Ок")
                 print("Ошибка получения токена: \(error)")
             }
         })
@@ -101,3 +124,4 @@ extension AuthViewController: WebViewViewControllerDelegate {
 protocol AuthViewControllerDelegate: AnyObject {
     func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String)
 }
+

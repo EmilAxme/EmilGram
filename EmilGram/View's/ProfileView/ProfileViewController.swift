@@ -1,6 +1,10 @@
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController{
+    private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
+    private var profileImageServiceObserver: NSObjectProtocol?
     // MARK: - View Properties
     private lazy var nameLabel: UILabel = {
         let nameLabel = createLabel(
@@ -27,9 +31,7 @@ final class ProfileViewController: UIViewController{
         return descriptionLabel
     }()
     private lazy var profileImageView: UIImageView = {
-        let profileImage = UIImage(named: "profilePhoto")
         let profileImageView = createImageView()
-        profileImageView.image = profileImage
         return profileImageView
     }()
     private lazy var logOutButton: UIButton = {
@@ -43,11 +45,41 @@ final class ProfileViewController: UIViewController{
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        profileImageServiceObserver = NotificationCenter.default.addObserver(
+            forName: ProfileImageService.didChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            guard let self else { return }
+            self.updateAvatar()
+        }
+        guard let profile = profileService.profile else { return }
+        updateProfileDetails(profile: profile)
         setupUI()
+        updateAvatar()
     }
     
     // MARK: - Setup UI
+    private func updateAvatar() {
+        guard
+            let profileImageURL = ProfileImageService.shared.avatarURL,
+            let url = URL(string: profileImageURL)
+        else { return }
+        let processor = RoundCornerImageProcessor(cornerRadius: 50)
+        profileImageView.kf.setImage(with: url, options: [.processor(processor)])
+    }
+    
+    private func updateProfileDetails(profile: Profile) {
+        nameLabel.text = profile.name
+        descriptionLabel.text = profile.bio
+        userIDLabel.text = profile.loginName
+    }
+    
+    
+    
     private func setupUI() {
+        view.backgroundColor = UIColor(named: "YP Black (iOS)")
         let labelsStackView = UIStackView(arrangedSubviews: [nameLabel, userIDLabel, descriptionLabel])
         labelsStackView.axis = .vertical
         labelsStackView.spacing = 8
