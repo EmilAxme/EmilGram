@@ -1,16 +1,15 @@
 import Foundation
  
 final class ProfileImageService {
-    //MARK: - Static property
+    //MARK: - Notification
     static let didChangeNotification = Notification.Name("ProfileImageProviderDidChange")
+    
     //MARK: - Singleton
     static let shared = ProfileImageService()
     private init() {}
     
-    
-    private(set) var avatarURL: String?
-    
     //MARK: - Private properties
+    private(set) var avatarURL: String?
     private var task: URLSessionTask?
     private var lastCode: String?
     private var profileService = ProfileService.shared

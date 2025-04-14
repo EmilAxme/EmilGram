@@ -48,5 +48,10 @@ final class ImagesListViewController: UIViewController {
         }
     }
     
+    //MARK: - Function's
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        
+    }
+    
 }
 
