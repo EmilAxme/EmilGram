@@ -9,8 +9,11 @@ import UIKit
 
 final class ImagesListViewController: UIViewController {
     // MARK: - Properties
+    private var imageListServiceObserver: NSObjectProtocol?
     let showSingleImageSegueIdentifier = "ShowSingleImage"
+    let imagesListService = ImagesListService.shared
     let photosName: [String] = Array(0..<20).map{ "\($0)"}
+    var photos: [Photo] = []
     
     lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -25,6 +28,17 @@ final class ImagesListViewController: UIViewController {
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        imageListServiceObserver = NotificationCenter.default.addObserver(
+            forName: ImagesListService.didChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            guard let self else { return }
+            self.updateTableViewAnimated()
+        }
+        imagesListService.fetchPhotosNextPage { _ in}
+        
         tableView.rowHeight = 200
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
     }
@@ -50,8 +64,25 @@ final class ImagesListViewController: UIViewController {
     
     //MARK: - Function's
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        
+        if indexPath.row == photos.count - 1 {
+            imagesListService.fetchPhotosNextPage { _ in }
+        }
     }
+    
+    func updateTableViewAnimated() {
+        let oldCount = photos.count
+        let newCount = imagesListService.photos.count
+        photos = imagesListService.photos
+        if oldCount != newCount {
+            tableView.performBatchUpdates {
+                let indexPaths = (oldCount..<newCount).map { i in
+                    IndexPath(row: i, section: 0)
+                }
+                tableView.insertRows(at: indexPaths, with: .automatic)
+            } completion: { _ in }
+        }
+    }
+
     
 }
 

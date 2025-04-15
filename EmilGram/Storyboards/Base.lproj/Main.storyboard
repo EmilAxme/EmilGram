@@ -102,6 +102,9 @@
                                                     </constraints>
                                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                     <state key="normal" image="LikeButtonActive"/>
+                                                    <connections>
+                                                        <action selector="likeButtonClicked:" destination="RfQ-Rc-eu5" eventType="touchUpInside" id="qyb-cY-Vu8"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>
