@@ -81,7 +81,7 @@ final class AuthViewController: UIViewController {
     private func makeErrorAlert(title: String, message: String?, buttonText: String) {
         let errorAlert = AlertModel(title: title,
                                     message: message ?? nil,
-                                    buttonText: buttonText)
+                                    buttonText: buttonText, secondButtonText: nil)
         
         guard let alert else { return }
         

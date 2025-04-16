@@ -9,8 +9,15 @@ final class ImagesListCell: UITableViewCell {
     @IBAction func likeButtonClicked(_ sender: Any) {
         delegate?.imageListCellDidTapLike(self)
     }
+    
     // MARK: - Static property
     static let reuseIdentifier = "ImageListCell"
-    // MARK: - Property's
     weak var delegate: ImagesListCellDelegate?
+    
+    // MARK: - Functions
+    func setIsLiked(_ isLiked: Bool) {
+        let likeImage = isLiked ? UIImage(named: "LikeButtonActive") : UIImage(named: "LikeButton")
+        likeButton.setImage(likeImage, for: .normal)
+    }
+    
 }

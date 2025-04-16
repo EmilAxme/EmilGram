@@ -71,4 +71,7 @@ final class ProfileService {
         urlRequest.setValue("Bearer \(OAuth2TokenStorage.shared.token ?? "asd")", forHTTPHeaderField: "Authorization")
         return urlRequest
     }
+    func removeProfile() {
+        profile = nil
+    }
 }

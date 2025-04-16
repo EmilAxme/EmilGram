@@ -22,14 +22,14 @@ final class ImagesListService {
         if task != nil {
             return
         }
-
+        
         let nextPage = (lastLoadedPage ?? 0) + 1
-
+        
         guard let request = makeImageListRequest(pageNumber: nextPage) else {
             completion(.failure(NSError(domain: "ImagesListService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Ошибка создания запроса"])))
             return
         }
-
+        
         
         let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<[PhotoResult], Error>) in
             guard let self = self else { return }
@@ -46,9 +46,9 @@ final class ImagesListService {
                     )
                 case .failure(let error):
                     if let error = error as? NetworkError {
-                        handleNetworkError(error, service: "[ProfileService.fetchOAuthToken]", completion: completion)
+                        handleNetworkError(error, service: "[ImagesListService.fetchPhotosNextPage]", completion: completion)
                     } else {
-                        print("[ProfileService.fetchOAuthToken]: Error - Неизвестная ошибка: \(error.localizedDescription)")
+                        print("[ImagesListService.fetchPhotosNextPage]: Error - Неизвестная ошибка: \(error.localizedDescription)")
                         completion(.failure(error))
                     }
                 }
@@ -61,18 +61,18 @@ final class ImagesListService {
     
     private func makeImageListRequest(pageNumber: Int) -> URLRequest? {
         guard var components = URLComponents(string: Constants.defaultAPIBaseURL?.appendingPathComponent("/photos").absoluteString ?? "") else {
-                print("Ошибка: невозможно создать URLComponents")
-                return nil
-            }
-
-            components.queryItems = [
-                URLQueryItem(name: "page", value: "\(pageNumber)")
-            ]
-
-            guard let url = components.url else {
-                print("Ошибка: невозможно создать URL из компонентов")
-                return nil
-            }
+            print("Ошибка: невозможно создать URLComponents")
+            return nil
+        }
+        
+        components.queryItems = [
+            URLQueryItem(name: "page", value: "\(pageNumber)")
+        ]
+        
+        guard let url = components.url else {
+            print("Ошибка: невозможно создать URL из компонентов")
+            return nil
+        }
         
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "GET"
@@ -81,56 +81,53 @@ final class ImagesListService {
     }
     
     func changeLike(photoId: String, isLiked: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
-        if isLiked {
-            let baseUrl = Constants.defaultBaseURL?.appendingPathComponent("/photos/\(photoId)/like")
-            guard let baseUrl else {
-                print("Ошибка: невозможно создать baseURL")
-                return
-            }
-            guard var urlComponents = URLComponents(url: baseUrl, resolvingAgainstBaseURL: false) else {
-                print("Ошибка: не удалось создать URLComponents из \(baseUrl)")
+        let httpMethod = isLiked ? "POST" : "DELETE"
+        
+        guard let baseUrl = Constants.defaultAPIBaseURL?.appendingPathComponent("/photos/\(photoId)/like") else {
+            print("Ошибка: невозможно создать baseURL")
+            completion(.failure(NSError(domain: "ImagesListService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])))
+            return
+        }
+        
+        var request = URLRequest(url: baseUrl)
+        request.httpMethod = httpMethod
+        request.setValue("Bearer \(OAuth2TokenStorage.shared.token ?? "")", forHTTPHeaderField: "Authorization")
+        
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+            
+            if let error = error {
+                completion(.failure(error))
                 return
             }
             
-            urlComponents.queryItems = [
-                URLQueryItem(name: "client_id", value: Constants.accessKey)
-            ]
-            guard let url = urlComponents.url else {
-                print("Ошибка: не удалось получить URL из URLComponents: \(urlComponents)")
-                return
-            }
-            var urlRequest = URLRequest(url: url)
-            urlRequest.httpMethod = "POST"
-        } else {
-            let baseUrl = Constants.defaultBaseURL?.appendingPathComponent("/photos/\(photoId)/like")
-            guard let baseUrl else {
-                print("Ошибка: невозможно создать baseURL")
-                return
-            }
-            guard var urlComponents = URLComponents(url: baseUrl, resolvingAgainstBaseURL: false) else {
-                print("Ошибка: не удалось создать URLComponents из \(baseUrl)")
-                return
+            // Обновим локальную модель
+            guard let self else { return }
+            if let index = self.photos.firstIndex(where: { $0.id == photoId }) {
+                let oldPhoto = self.photos[index]
+                let newPhoto = Photo(
+                    id: oldPhoto.id,
+                    size: oldPhoto.size,
+                    createdAt: oldPhoto.createdAt,
+                    welcomeDescription: oldPhoto.welcomeDescription,
+                    thumbImageURL: oldPhoto.thumbImageURL,
+                    largeImageURL: oldPhoto.largeImageURL,
+                    isLiked: !oldPhoto.isLiked
+                )
+                self.photos[index] = newPhoto
+                
+                NotificationCenter.default.post(
+                    name: ImagesListService.didChangeNotification,
+                    object: self
+                )
             }
             
-            urlComponents.queryItems = [
-                URLQueryItem(name: "client_id", value: Constants.accessKey)
-            ]
-            guard let url = urlComponents.url else {
-                print("Ошибка: не удалось получить URL из URLComponents: \(urlComponents)")
-                return
-            }
-            var urlRequest = URLRequest(url: url)
-            urlRequest.httpMethod = "DELETE"
+            completion(.success(()))
         }
-        // Поиск индекса элемента
-        if let index = self.photos.firstIndex(where: { $0.id == photoId }) {
-            // Текущий элемент
-           let photo = self.photos[index]
-           // Копия элемента с инвертированным значением isLiked.
-            let newPhoto = Photo(from: <#PhotoResult#>)
-            // Заменяем элемент в массиве.
-            self.photos = self.photos.withReplaced(itemAt: index, newValue: newPhoto)
-        }
+        task.resume()
+    }
+    func removePhotosFromDisk() {
+        photos.removeAll()
     }
     
 }
+

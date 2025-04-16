@@ -4,6 +4,7 @@ import Kingfisher
 final class ProfileViewController: UIViewController{
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
+    private let profileLogoutService = ProfileLogoutService.shared
     private var profileImageServiceObserver: NSObjectProtocol?
     // MARK: - View Properties
     private lazy var nameLabel: UILabel = {
@@ -37,7 +38,7 @@ final class ProfileViewController: UIViewController{
     private lazy var logOutButton: UIButton = {
         let logOutImage = UIImage(named: "logOut_button")
         guard let logOutImage else { return UIButton() }
-        let logOutButton = UIButton.systemButton(with: logOutImage, target: self, action: nil)
+        let logOutButton = UIButton.systemButton(with: logOutImage, target: self, action: #selector(action))
         view.addToView(logOutButton)
         return logOutButton
     }()
@@ -100,6 +101,10 @@ final class ProfileViewController: UIViewController{
     }
     
     // MARK: - Helpers
+    @objc private func action(sender: UIButton) {
+        profileLogoutService.logout()
+        showAuthController()
+    }
     private func addToView(_ UI: UIView) {
         UI.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(UI)
@@ -118,5 +123,22 @@ final class ProfileViewController: UIViewController{
         let imageView = UIImageView()
         view.addToView(imageView)
         return imageView
+    }
+    func showAuthController() {
+        let storyboard = UIStoryboard(name: "Main", bundle: .main)
+        guard let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else {
+            print("Не удалось создать AuthViewController")
+            return
+        }
+
+        authViewController.delegate = self
+        authViewController.modalPresentationStyle = .fullScreen
+        present(authViewController, animated: true)
+    }
+}
+
+extension ProfileViewController: AuthViewControllerDelegate {
+    func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
+        vc.dismiss(animated: true)
     }
 }

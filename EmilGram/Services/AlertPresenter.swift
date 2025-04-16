@@ -12,10 +12,16 @@ final class AlertPresenter {
         let alert = UIAlertController(title: model.title, message: model.message, preferredStyle: .alert)
         
         let action = UIAlertAction(title: model.buttonText, style: .default) { _ in
-            model.completion?()  // вызывается только если есть
+            model.completion?()
         }
-        
         alert.addAction(action)
+
+        if let secondTitle = model.secondButtonText {
+            let secondAction = UIAlertAction(title: secondTitle, style: .default) { _ in
+                model.secondCompletion?()
+            }
+            alert.addAction(secondAction)
+        }
         delegate?.present(alert, animated: true)
     }
 }

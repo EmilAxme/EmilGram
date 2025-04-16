@@ -10,6 +10,7 @@ import UIKit
 final class ImagesListViewController: UIViewController {
     // MARK: - Properties
     private var imageListServiceObserver: NSObjectProtocol?
+    private var alert: AlertPresenter?
     let showSingleImageSegueIdentifier = "ShowSingleImage"
     let imagesListService = ImagesListService.shared
     let photosName: [String] = Array(0..<20).map{ "\($0)"}
@@ -23,12 +24,13 @@ final class ImagesListViewController: UIViewController {
     }()
     
     // MARK: - Outlets
-    @IBOutlet private var tableView: UITableView!
+    @IBOutlet var tableView: UITableView!
     
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        alert = AlertPresenter(delegate: self)
         imageListServiceObserver = NotificationCenter.default.addObserver(
             forName: ImagesListService.didChangeNotification,
             object: nil,
@@ -44,23 +46,24 @@ final class ImagesListViewController: UIViewController {
     }
     
     //MARK: - Override func
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == showSingleImageSegueIdentifier {
-            guard
-                let viewController = segue.destination as? SingleImageViewController,
-                let indexPath = sender as? IndexPath
-            else {
-                assertionFailure("Invalid segue destination")
-                return
-            }
-            
-            let image = UIImage(named: photosName[indexPath.row])
-            viewController.image = image
-        }
-        else {
-            super.prepare(for: segue, sender: sender)
-        }
-    }
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        if segue.identifier == showSingleImageSegueIdentifier {
+//            guard
+//                let viewController = segue.destination as? SingleImageViewController,
+//                let indexPath = sender as? IndexPath
+//            else {
+//                assertionFailure("Invalid segue destination")
+//                return
+//            }
+//            let imageView = UIImageView()
+//            UIBlockingProgressHUD.show()
+//            guard let url = URL(string: photos[indexPath.row].largeImageURL) else { return }
+//            loadFullImage(for: viewController, url: url)
+//        }
+//        else {
+//            super.prepare(for: segue, sender: sender)
+//        }
+//    }
     
     //MARK: - Function's
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -82,7 +85,41 @@ final class ImagesListViewController: UIViewController {
             } completion: { _ in }
         }
     }
-
+    func showError(title: String, message: String?, buttonText: String, secondButtonText: String?, completion: (() -> Void)? = nil, secondCompletion: (() -> Void)? = nil) {
+        let errorAlert = AlertModel(title: title,
+                                    message: message ?? nil,
+                                    buttonText: buttonText, secondButtonText: secondButtonText,
+                                    completion: completion, secondCompletion: secondCompletion)
+        
+        guard let alert else { return }
+        
+        alert.presentAlert(with: errorAlert)
+    }
+    
+    func loadFullImage(for viewController: SingleImageViewController, url: URL) {
+        let imageView = UIImageView()
+        UIBlockingProgressHUD.show()
+        imageView.kf.setImage(with: url) { [weak self] result in
+            guard let self else { return }
+            UIBlockingProgressHUD.dismiss()
+            
+            switch result {
+            case .success(let imageResult):
+                viewController.image = imageResult.image
+                print("Все прошло успешно ура-ура-ура")
+            case .failure:
+                self.showError(
+                    title: "Что-то пошло не так",
+                    message: "Попробовать ещё раз?",
+                    buttonText: "Не надо",
+                    secondButtonText: "Повторить",
+                    secondCompletion: {
+                        self.loadFullImage(for: viewController, url: url)
+                    }
+                )
+            }
+        }
+    }
+        
     
 }
-

@@ -41,7 +41,7 @@ final class SplashViewController: UIViewController {
         let errorAlert = AlertModel(
             title: title,
             message: message,
-            buttonText: buttonText,
+            buttonText: buttonText, secondButtonText: nil,
             completion: completion
         )
         
@@ -67,7 +67,7 @@ final class SplashViewController: UIViewController {
             logoImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
-    private func showAuthController() {
+    func showAuthController() {
         let storyboard = UIStoryboard(name: "Main", bundle: .main)
         guard let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else {
             print("Не удалось создать AuthViewController")

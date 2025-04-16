@@ -62,4 +62,7 @@ final class ProfileImageService {
         urlRequest.setValue("Bearer \(OAuth2TokenStorage.shared.token ?? "")", forHTTPHeaderField: "Authorization")
         return urlRequest
     }
+    func removeProfilePhoto() {
+        avatarURL = nil
+    }
 }
