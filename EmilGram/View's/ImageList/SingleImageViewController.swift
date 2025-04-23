@@ -42,7 +42,6 @@ final class SingleImageViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: - Functions
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
-        // Задаём фрейм imageView и контентный размер scrollView
         singleImage.frame = CGRect(origin: .zero, size: image.size)
         scrollView.contentSize = image.size
         
@@ -57,7 +56,6 @@ final class SingleImageViewController: UIViewController, UIScrollViewDelegate {
         
         scrollView.setZoomScale(scale, animated: false)
         
-        // Центрируем картинку
         let newContentSize = scrollView.contentSize
         let x = (newContentSize.width - visibleRectSize.width) / 2
         let y = (newContentSize.height - visibleRectSize.height) / 2
@@ -70,7 +68,7 @@ final class SingleImageViewController: UIViewController, UIScrollViewDelegate {
     }
 }
 
-// MARK: Extension's
+// MARK: - Extension's
 extension SingleImageViewController {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return singleImage

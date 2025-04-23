@@ -99,8 +99,7 @@ final class ImagesListService {
                 completion(.failure(error))
                 return
             }
-            
-            // Обновим локальную модель
+
             guard let self else { return }
             if let index = self.photos.firstIndex(where: { $0.id == photoId }) {
                 let oldPhoto = self.photos[index]

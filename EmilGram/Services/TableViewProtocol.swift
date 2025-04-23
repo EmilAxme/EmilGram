@@ -3,9 +3,6 @@ import Kingfisher
 import ProgressHUD
 
 extension ImagesListViewController: UITableViewDelegate {
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        performSegue(withIdentifier: showSingleImageSegueIdentifier, sender: indexPath)
-//    }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let url = URL(string: photos[indexPath.row].largeImageURL) else { return }
 
@@ -69,20 +66,24 @@ extension ImagesListViewController: UITableViewDataSource {
 
 extension ImagesListViewController {
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
+        if !cell.isShimmering {
+            addShimmer(to: cell.cellImage)
+            cell.isShimmering = true
+        }
+
         let image = photos[indexPath.row].thumbImageURL
         let url = URL(string: image)
         cell.cellImage.kf.indicatorType = .activity
-        cell.cellImage.kf.setImage(
-            with: url,
-            placeholder: UIImage(named: "placeholder"),
-            options: .none
-        )
-        
+        cell.cellImage.kf.setImage(with: url, placeholder: UIImage(named: "placeholder"), options: nil) { [weak self] _ in
+            guard let self else { return }
+            cell.isShimmering = false
+            self.removeShimmer(from: cell.cellImage)
+        }
+
         let likeImage = photos[indexPath.row].isLiked ? UIImage(named: "LikeButtonActive") : UIImage(named: "LikeButton")
         cell.likeButton.setImage(likeImage, for: .normal)
-        
         cell.dateLabel.text = "\(dateFormatter.string(from: Date()))"
-        cell.delegate = self 
+        cell.delegate = self
     }
 }
 

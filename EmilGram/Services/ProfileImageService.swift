@@ -32,11 +32,11 @@ final class ProfileImageService {
                 case .success(let profileImageResult):
                     let avatarURL = profileImageResult.profileImage.small
                     self.avatarURL = avatarURL
-                    completion(.success(avatarURL))
                     NotificationCenter.default.post(
                         name: ProfileImageService.didChangeNotification,
-                        object: self,
-                        userInfo: ["URL": avatarURL])
+                        object: self
+                    )
+                    completion(.success(avatarURL))
                 case .failure(let error):
                     if let error = error as? NetworkError {
                         handleNetworkError(error, service: "[ProfileImageService.fetchProfileImageURL]", completion: completion)
@@ -51,6 +51,10 @@ final class ProfileImageService {
         task.resume()
     }
     
+    func removeProfilePhoto() {
+        avatarURL = nil
+    }
+
     private func makeUserProfileRequest(username: String) -> URLRequest? {
         guard let baseUrl = Constants.defaultAPIBaseURL?.appendingPathComponent("users/\(username)") else {
             print("Ошибка: невозможно создать baseURL")
@@ -62,7 +66,5 @@ final class ProfileImageService {
         urlRequest.setValue("Bearer \(OAuth2TokenStorage.shared.token ?? "")", forHTTPHeaderField: "Authorization")
         return urlRequest
     }
-    func removeProfilePhoto() {
-        avatarURL = nil
-    }
+    
 }
