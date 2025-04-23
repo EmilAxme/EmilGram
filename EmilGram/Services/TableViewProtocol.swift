@@ -66,18 +66,18 @@ extension ImagesListViewController: UITableViewDataSource {
 
 extension ImagesListViewController {
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-        if !cell.isShimmering {
-            addShimmer(to: cell.cellImage)
-            cell.isShimmering = true
-        }
+//        if !cell.isShimmering {
+//            addShimmer(to: cell.cellImage)
+//            cell.isShimmering = true
+//        }
+        addShimmer(to: cell.cellImage)
 
         let image = photos[indexPath.row].thumbImageURL
         let url = URL(string: image)
         cell.cellImage.kf.indicatorType = .activity
         cell.cellImage.kf.setImage(with: url, placeholder: UIImage(named: "placeholder"), options: nil) { [weak self] _ in
             guard let self else { return }
-            cell.isShimmering = false
-            self.removeShimmer(from: cell.cellImage)
+            self.removeShimmerLayers()
         }
 
         let likeImage = photos[indexPath.row].isLiked ? UIImage(named: "LikeButtonActive") : UIImage(named: "LikeButton")

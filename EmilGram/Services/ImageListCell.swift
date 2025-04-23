@@ -13,7 +13,7 @@ final class ImagesListCell: UITableViewCell {
     // MARK: - Static property
     static let reuseIdentifier = "ImageListCell"
     weak var delegate: ImagesListCellDelegate?
-    var isShimmering = false
+//    var isShimmering = false
     
     // MARK: - Functions
     func setIsLiked(_ isLiked: Bool) {
