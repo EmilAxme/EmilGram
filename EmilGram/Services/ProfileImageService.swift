@@ -55,6 +55,7 @@ final class ProfileImageService {
         avatarURL = nil
     }
 
+    //MARK: - Private Function's
     private func makeUserProfileRequest(username: String) -> URLRequest? {
         guard let baseUrl = Constants.defaultAPIBaseURL?.appendingPathComponent("users/\(username)") else {
             print("Ошибка: невозможно создать baseURL")

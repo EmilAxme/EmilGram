@@ -1,6 +1,7 @@
 import Foundation
 
 struct PhotoResult: Codable {
+    // MARK: - Public Properties
     let id: String
     let width: Int
     let height: Int
@@ -9,6 +10,7 @@ struct PhotoResult: Codable {
     let urls: UrlsResult
     let likedByUser: Bool
     
+    // MARK: - Struct
     struct UrlsResult: Codable {
         let full: String
         let thumb: String

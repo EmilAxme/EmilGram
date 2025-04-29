@@ -59,27 +59,6 @@ final class ImagesListService {
         task.resume()
     }
     
-    private func makeImageListRequest(pageNumber: Int) -> URLRequest? {
-        guard var components = URLComponents(string: Constants.defaultAPIBaseURL?.appendingPathComponent("/photos").absoluteString ?? "") else {
-            print("Ошибка: невозможно создать URLComponents")
-            return nil
-        }
-        
-        components.queryItems = [
-            URLQueryItem(name: "page", value: "\(pageNumber)")
-        ]
-        
-        guard let url = components.url else {
-            print("Ошибка: невозможно создать URL из компонентов")
-            return nil
-        }
-        
-        var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = "GET"
-        urlRequest.setValue("Bearer \(OAuth2TokenStorage.shared.token ?? "")", forHTTPHeaderField: "Authorization")
-        return urlRequest
-    }
-    
     func changeLike(photoId: String, isLiked: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
         let httpMethod = isLiked ? "POST" : "DELETE"
         
@@ -124,8 +103,31 @@ final class ImagesListService {
         }
         task.resume()
     }
+    
     func removePhotosFromDisk() {
         photos.removeAll()
+    }
+    
+    //MARK: - Private Function's
+    private func makeImageListRequest(pageNumber: Int) -> URLRequest? {
+        guard var components = URLComponents(string: Constants.defaultAPIBaseURL?.appendingPathComponent("/photos").absoluteString ?? "") else {
+            print("Ошибка: невозможно создать URLComponents")
+            return nil
+        }
+        
+        components.queryItems = [
+            URLQueryItem(name: "page", value: "\(pageNumber)")
+        ]
+        
+        guard let url = components.url else {
+            print("Ошибка: невозможно создать URL из компонентов")
+            return nil
+        }
+        
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "GET"
+        urlRequest.setValue("Bearer \(OAuth2TokenStorage.shared.token ?? "")", forHTTPHeaderField: "Authorization")
+        return urlRequest
     }
     
 }

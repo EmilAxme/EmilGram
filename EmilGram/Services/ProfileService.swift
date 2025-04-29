@@ -59,6 +59,11 @@ final class ProfileService {
         task.resume()
     }
     
+    func removeProfile() {
+        profile = nil
+    }
+
+    //MARK: - Private Function's
     private func makeUserProfileRequest() -> URLRequest? {
         let baseUrl = Constants.defaultAPIBaseURL?.appendingPathComponent("me")
         guard let baseUrl else {
@@ -71,7 +76,5 @@ final class ProfileService {
         urlRequest.setValue("Bearer \(OAuth2TokenStorage.shared.token ?? "asd")", forHTTPHeaderField: "Authorization")
         return urlRequest
     }
-    func removeProfile() {
-        profile = nil
-    }
+    
 }

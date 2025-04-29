@@ -40,7 +40,7 @@ final class SingleImageViewController: UIViewController, UIScrollViewDelegate {
         rescaleAndCenterImageInScrollView(image: image)
     }
     
-    // MARK: - Functions
+    // MARK: - Private Functions
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
         singleImage.frame = CGRect(origin: .zero, size: image.size)
         scrollView.contentSize = image.size

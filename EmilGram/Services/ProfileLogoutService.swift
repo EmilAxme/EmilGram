@@ -19,6 +19,7 @@ final class ProfileLogoutService {
         cleanCookies()
     }
     
+    //MARK: - Private Function's
     private func cleanCookies() {
           HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
           WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in

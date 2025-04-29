@@ -53,6 +53,7 @@ final class OAuth2Service {
         task.resume()
     }
     
+    //MARK: - Private Function's
     private func makeRequest(code: String) -> URLRequest? {
         let baseUrl = Constants.defaultBaseURL?.appendingPathComponent("oauth/token")
         guard let baseUrl else {

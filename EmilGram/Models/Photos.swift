@@ -1,6 +1,7 @@
 import Foundation
 
 struct Photo {
+    // MARK: - Public Properties
     let id: String
     let size: CGSize
     let createdAt: Date?
@@ -9,6 +10,7 @@ struct Photo {
     let largeImageURL: String
     let isLiked: Bool
     
+    // MARK: - Init's
     init(from result: PhotoResult) {
         self.id = result.id
         self.size = CGSize(width: result.width, height: result.height)
