@@ -7,6 +7,7 @@ final class ProfileViewController: UIViewController{
     private let profileImageService = ProfileImageService.shared
     private let profileLogoutService = ProfileLogoutService.shared
     private var profileImageServiceObserver: NSObjectProtocol?
+    private var alert: AlertPresenter?
     private var shimmerAdded = false
     
     var animationLayers = Set<CALayer>()
@@ -51,6 +52,7 @@ final class ProfileViewController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        alert = AlertPresenter(delegate: self)
         guard let profile = profileService.profile else { return }
         updateProfileDetails(profile: profile)
         setupUI()
@@ -177,6 +179,23 @@ final class ProfileViewController: UIViewController{
         present(authViewController, animated: true)
     }
     @objc private func action(sender: UIButton) {
+        showLogoutAlert(title: "Пока, пока!", message: "Уверены, что хотите выйти?", firstButtonText: "Да", firstButtonCompletion: logOut, secondButtonText: "Нет")
+    }
+    private func showLogoutAlert(title: String, message: String, firstButtonText: String, firstButtonCompletion: (() -> Void)? = nil, secondButtonText: String) {
+        
+        let errorAlert = AlertModel(
+            title: title,
+            message: message,
+            buttonText: firstButtonText,
+            secondButtonText: secondButtonText,
+            completion: firstButtonCompletion
+        )
+        
+        guard let alert else { return }
+        alert.presentAlert(with: errorAlert)
+    }
+    
+    private func logOut() {
         profileLogoutService.logout()
         showAuthController()
     }

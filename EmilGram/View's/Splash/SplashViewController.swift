@@ -36,7 +36,7 @@ final class SplashViewController: UIViewController {
     }
     
     // MARK: - Private function's
-    func showNetworkError(title: String, message: String, buttonText: String, completion: (() -> Void)? = nil) {
+    private func showNetworkError(title: String, message: String, buttonText: String, completion: (() -> Void)? = nil) {
         
         let errorAlert = AlertModel(
             title: title,
@@ -59,7 +59,7 @@ final class SplashViewController: UIViewController {
         window.rootViewController = tabBarController
     }
     
-    func setupUI() {
+    private func setupUI() {
         view.addSubview(logoImageView)
 
         NSLayoutConstraint.activate([
@@ -67,7 +67,7 @@ final class SplashViewController: UIViewController {
             logoImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
-    func showAuthController() {
+    private func showAuthController() {
         let storyboard = UIStoryboard(name: "Main", bundle: .main)
         guard let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else {
             print("Не удалось создать AuthViewController")

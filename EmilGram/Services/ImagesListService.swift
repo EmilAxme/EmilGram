@@ -39,11 +39,11 @@ final class ImagesListService {
                     let newPhotos = photoResults.map { Photo(from: $0) }
                     self.photos.append(contentsOf: newPhotos)
                     self.lastLoadedPage = nextPage
-                    completion(.success(newPhotos))
                     NotificationCenter.default.post(
                         name: ImagesListService.didChangeNotification,
                         object: self
                     )
+                    completion(.success(newPhotos))
                 case .failure(let error):
                     if let error = error as? NetworkError {
                         handleNetworkError(error, service: "[ImagesListService.fetchPhotosNextPage]", completion: completion)
