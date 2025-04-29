@@ -3,6 +3,10 @@ import WebKit
 
 final class WebViewViewController: UIViewController {
     //MARK: - Property's
+    private var estimatedProgressObservation: NSKeyValueObservation?
+    
+    weak var delegate: WebViewViewControllerDelegate?
+    //MARK: - Lazy Property's
     private lazy var progressView: UIProgressView = {
         var progressView = UIProgressView()
         view.addToView(progressView)
@@ -16,10 +20,6 @@ final class WebViewViewController: UIViewController {
         WKWebView.backgroundColor = .white
         return WKWebView
     }()
-    
-    private var estimatedProgressObservation: NSKeyValueObservation?
-    
-    weak var delegate: WebViewViewControllerDelegate?
     //MARK: - Lifecycle
     override func viewDidLoad() {
         webView.navigationDelegate = self

@@ -1,10 +1,3 @@
-//
-//  ViewController.swift
-//  EmilGram
-//
-//  Created by Emil on 25.01.2025.
-//
-
 import UIKit
 
 final class ImagesListViewController: UIViewController {
@@ -21,7 +14,7 @@ final class ImagesListViewController: UIViewController {
     
     lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateStyle = .long
+        formatter.dateStyle = .medium
         formatter.timeStyle = .none
         return formatter
     }()
@@ -110,7 +103,7 @@ final class ImagesListViewController: UIViewController {
     
     func addShimmer(to view: UIView, cornerRadius: CGFloat = 0) {
         let gradient = CAGradientLayer()
-        gradient.frame = view.bounds // теперь безопасно
+        gradient.frame = view.bounds
         gradient.locations = [0, 0.1, 0.3]
         gradient.colors = [
             UIColor(red: 0.682, green: 0.686, blue: 0.706, alpha: 1).cgColor,

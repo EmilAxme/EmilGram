@@ -50,13 +50,6 @@ final class ProfileViewController: UIViewController{
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
-//        profileImageServiceObserver = NotificationCenter.default.addObserver(
-//            forName: ProfileImageService.didChangeNotification,
-//            object: nil,
-//            queue: .main
-//        ) { [weak self] _ in
-//        }
         
         guard let profile = profileService.profile else { return }
         updateProfileDetails(profile: profile)
@@ -74,7 +67,6 @@ final class ProfileViewController: UIViewController{
         addShimmer(to: descriptionLabel)
         
         if profileImageService.avatarURL != nil {
-            print("Эмилька килька")
             updateAvatar()
             removeShimmerLayers()
         }
@@ -142,26 +134,9 @@ final class ProfileViewController: UIViewController{
         return imageView
     }
     
-    // MARK: - private function's 
-    private func showAuthController() {
-        let storyboard = UIStoryboard(name: "Main", bundle: .main)
-        guard let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else {
-            print("Не удалось создать AuthViewController")
-            return
-        }
-
-        authViewController.delegate = self
-        authViewController.modalPresentationStyle = .fullScreen
-        present(authViewController, animated: true)
-    }
-    @objc private func action(sender: UIButton) {
-        profileLogoutService.logout()
-        showAuthController()
-    }
-    
     private func addShimmer(to view: UIView, cornerRadius: CGFloat = 0) {
         let gradient = CAGradientLayer()
-        gradient.frame = view.bounds // теперь безопасно
+        gradient.frame = view.bounds 
         gradient.locations = [0, 0.1, 0.3]
         gradient.colors = [
             UIColor(red: 0.682, green: 0.686, blue: 0.706, alpha: 1).cgColor,
@@ -187,6 +162,23 @@ final class ProfileViewController: UIViewController{
             layer.removeFromSuperlayer()
         }
         animationLayers.removeAll()
+    }
+    
+    // MARK: - private function's 
+    private func showAuthController() {
+        let storyboard = UIStoryboard(name: "Main", bundle: .main)
+        guard let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else {
+            print("Не удалось создать AuthViewController")
+            return
+        }
+
+        authViewController.delegate = self
+        authViewController.modalPresentationStyle = .fullScreen
+        present(authViewController, animated: true)
+    }
+    @objc private func action(sender: UIButton) {
+        profileLogoutService.logout()
+        showAuthController()
     }
 }
 
