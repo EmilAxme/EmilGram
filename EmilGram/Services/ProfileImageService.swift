@@ -13,6 +13,7 @@ final class ProfileImageService {
     private var task: URLSessionTask?
     private var lastCode: String?
     private var profileService = ProfileService.shared
+    private let oAuth2TokenStorage = OAuth2TokenStorage.shared
     
     //MARK: - Functions
     func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
@@ -55,7 +56,7 @@ final class ProfileImageService {
         avatarURL = nil
     }
 
-    //MARK: - Private Function's
+    //MARK: - Private Functions
     private func makeUserProfileRequest(username: String) -> URLRequest? {
         guard let baseUrl = Constants.defaultAPIBaseURL?.appendingPathComponent("users/\(username)") else {
             print("Ошибка: невозможно создать baseURL")
@@ -64,7 +65,7 @@ final class ProfileImageService {
         
         var urlRequest = URLRequest(url: baseUrl)
         urlRequest.httpMethod = "GET"
-        urlRequest.setValue("Bearer \(OAuth2TokenStorage.shared.token ?? "")", forHTTPHeaderField: "Authorization")
+        urlRequest.setValue("Bearer \(oAuth2TokenStorage.token ?? "")", forHTTPHeaderField: "Authorization")
         return urlRequest
     }
     

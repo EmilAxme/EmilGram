@@ -2,7 +2,7 @@ import UIKit
 import Kingfisher
 
 final class ProfileViewController: UIViewController{
-    //MARK: - Property's
+    //MARK: - Properties
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
     private let profileLogoutService = ProfileLogoutService.shared
@@ -43,7 +43,7 @@ final class ProfileViewController: UIViewController{
     private lazy var logOutButton: UIButton = {
         let logOutImage = UIImage(named: "logOut_button")
         guard let logOutImage else { return UIButton() }
-        let logOutButton = UIButton.systemButton(with: logOutImage, target: self, action: #selector(action))
+        let logOutButton = UIButton.systemButton(with: logOutImage, target: self, action: #selector(didTapLogoutButton))
         view.addToView(logOutButton)
         return logOutButton
     }()
@@ -78,7 +78,7 @@ final class ProfileViewController: UIViewController{
     // MARK: - Setup UI
     private func updateAvatar() {
         guard
-            let profileImageURL = ProfileImageService.shared.avatarURL,
+            let profileImageURL = profileImageService.avatarURL,
             let url = URL(string: profileImageURL)
         else { return }
         let processor = RoundCornerImageProcessor(cornerRadius: 50)
@@ -166,7 +166,7 @@ final class ProfileViewController: UIViewController{
         animationLayers.removeAll()
     }
     
-    // MARK: - private function's 
+    // MARK: - private functions 
     private func showAuthController() {
         let storyboard = UIStoryboard(name: "Main", bundle: .main)
         guard let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else {
@@ -178,7 +178,7 @@ final class ProfileViewController: UIViewController{
         authViewController.modalPresentationStyle = .fullScreen
         present(authViewController, animated: true)
     }
-    @objc private func action(sender: UIButton) {
+    @objc private func didTapLogoutButton(sender: UIButton) {
         showLogoutAlert(title: "Пока, пока!", message: "Уверены, что хотите выйти?", firstButtonText: "Да", firstButtonCompletion: logOut, secondButtonText: "Нет")
     }
     private func showLogoutAlert(title: String, message: String, firstButtonText: String, firstButtonCompletion: (() -> Void)? = nil, secondButtonText: String) {

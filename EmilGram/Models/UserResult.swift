@@ -1,7 +1,7 @@
 import Foundation
 
 struct UserResult: Codable {
-    //MARK: - Property
+    //MARK: - Properties
     let profileImage: ProfileImage
 
     //MARK: - Struct

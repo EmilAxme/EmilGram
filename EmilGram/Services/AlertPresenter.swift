@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 
 final class AlertPresenter {
-    // MARK: - Property
+    // MARK: - Properties
     weak var delegate: UIViewController?
     
     
@@ -11,7 +11,7 @@ final class AlertPresenter {
         self.delegate = delegate
     }
     
-    // MARK: - Func
+    // MARK: - Functions
     func presentAlert(with model: AlertModel) {
         let alert = UIAlertController(title: model.title, message: model.message, preferredStyle: .alert)
         

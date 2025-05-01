@@ -18,7 +18,7 @@ final class SingleImageViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: - Outlets
     @IBOutlet private var scrollView: UIScrollView!
-    @IBOutlet private var singleImage: UIImageView!{
+    @IBOutlet private var singleImage: UIImageView! {
         didSet {
                 guard isViewLoaded else { return }
                 guard let image = singleImage.image else { return }
@@ -31,16 +31,20 @@ final class SingleImageViewController: UIViewController, UIScrollViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        scrollView.delegate = self
-        scrollView.minimumZoomScale = 0.1
-        scrollView.maximumZoomScale = 1.25
-
         guard let image = image else { return }
         singleImage.image = image
+        
+        configureScrollView()
         rescaleAndCenterImageInScrollView(image: image)
     }
     
     // MARK: - Private Functions
+    private func configureScrollView() {
+        scrollView.delegate = self
+        scrollView.minimumZoomScale = 0.1
+        scrollView.maximumZoomScale = 1.25
+    }
+    
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
         singleImage.frame = CGRect(origin: .zero, size: image.size)
         scrollView.contentSize = image.size
@@ -68,7 +72,7 @@ final class SingleImageViewController: UIViewController, UIScrollViewDelegate {
     }
 }
 
-// MARK: - Extension's
+// MARK: - Extensions
 extension SingleImageViewController {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return singleImage

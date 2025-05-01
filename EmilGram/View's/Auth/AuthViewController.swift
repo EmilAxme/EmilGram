@@ -29,7 +29,7 @@ final class AuthViewController: UIViewController {
         
         super.viewDidLoad()
     }
-    //MARK: - Override function's
+    //MARK: - Override functions
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showWebViewSegueIdentifier {
             guard

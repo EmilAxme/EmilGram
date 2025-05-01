@@ -5,12 +5,13 @@ final class ProfileService {
     static let shared = ProfileService()
     private init() {}
     
-    //MARK: - Set var
+    //MARK: - Set Properties
     private(set) var profile: Profile?
     
     //MARK: - Properties
     private var task: URLSessionTask?
     private var lastToken: String?
+    private let oAuth2TokenStorage = OAuth2TokenStorage.shared
     
     //MARK: - ENUM
     private enum profileResultsConstants {
@@ -63,7 +64,7 @@ final class ProfileService {
         profile = nil
     }
 
-    //MARK: - Private Function's
+    //MARK: - Private Functions
     private func makeUserProfileRequest() -> URLRequest? {
         let baseUrl = Constants.defaultAPIBaseURL?.appendingPathComponent("me")
         guard let baseUrl else {
@@ -73,7 +74,7 @@ final class ProfileService {
         
         var urlRequest = URLRequest(url: baseUrl)
         urlRequest.httpMethod = "GET"
-        urlRequest.setValue("Bearer \(OAuth2TokenStorage.shared.token ?? "asd")", forHTTPHeaderField: "Authorization")
+        urlRequest.setValue("Bearer \(oAuth2TokenStorage.token ?? "asd")", forHTTPHeaderField: "Authorization")
         return urlRequest
     }
     

@@ -8,13 +8,14 @@ final class ImagesListService {
     static let shared = ImagesListService()
     private init() {}
     
-    //MARK: - Property's
+    //MARK: - Properties
     private(set) var photos: [Photo] = []
     
     private var lastLoadedPage: Int?
     private var task: URLSessionTask?
+    private let oAuth2TokenStorage = OAuth2TokenStorage.shared
     
-    //MARK: - Function's
+    //MARK: - Functions
     func fetchPhotosNextPage(completion: @escaping (Result<[Photo], Error>) -> Void) {
         assert(Thread.isMainThread)
         task?.cancel()
@@ -70,7 +71,7 @@ final class ImagesListService {
         
         var request = URLRequest(url: baseUrl)
         request.httpMethod = httpMethod
-        request.setValue("Bearer \(OAuth2TokenStorage.shared.token ?? "")", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(oAuth2TokenStorage.token ?? "")", forHTTPHeaderField: "Authorization")
         
         let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
             
@@ -108,7 +109,7 @@ final class ImagesListService {
         photos.removeAll()
     }
     
-    //MARK: - Private Function's
+    //MARK: - Private Functions
     private func makeImageListRequest(pageNumber: Int) -> URLRequest? {
         guard var components = URLComponents(string: Constants.defaultAPIBaseURL?.appendingPathComponent("/photos").absoluteString ?? "") else {
             print("Ошибка: невозможно создать URLComponents")
@@ -126,7 +127,7 @@ final class ImagesListService {
         
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "GET"
-        urlRequest.setValue("Bearer \(OAuth2TokenStorage.shared.token ?? "")", forHTTPHeaderField: "Authorization")
+        urlRequest.setValue("Bearer \(oAuth2TokenStorage.token ?? "")", forHTTPHeaderField: "Authorization")
         return urlRequest
     }
     

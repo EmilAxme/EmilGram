@@ -7,7 +7,6 @@ final class ImagesListViewController: UIViewController {
     
     let showSingleImageSegueIdentifier = "ShowSingleImage"
     let imagesListService = ImagesListService.shared
-//    let photosName: [String] = Array(0..<20).map{ "\($0)"}
     
     var photos: [Photo] = []
     var animationLayers = Set<CALayer>()
@@ -25,7 +24,7 @@ final class ImagesListViewController: UIViewController {
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        configureTableView()
         alert = AlertPresenter(delegate: self)
 
         imageListServiceObserver = NotificationCenter.default.addObserver(
@@ -39,17 +38,9 @@ final class ImagesListViewController: UIViewController {
         
         imagesListService.fetchPhotosNextPage { _ in }
         
-        tableView.rowHeight = 200
-        tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
     }
     
-    //MARK: - Function's
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.row == photos.count - 1 {
-            imagesListService.fetchPhotosNextPage { _ in
-            }
-        }
-    }
+    //MARK: - Functions
     
     func updateTableViewAnimated() {
         let oldCount = photos.count
@@ -129,6 +120,12 @@ final class ImagesListViewController: UIViewController {
             layer.removeFromSuperlayer()
         }
         animationLayers.removeAll()
+    }
+    
+    //MARK: - Private Functions
+    func configureTableView() {
+        tableView.rowHeight = 200
+        tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
     }
     
 }

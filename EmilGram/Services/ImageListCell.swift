@@ -3,14 +3,14 @@ import Kingfisher
 
 final class ImagesListCell: UITableViewCell {
     // MARK: - Outlet's
-    @IBOutlet var likeButton: UIButton!
-    @IBOutlet var cellImage: UIImageView!
-    @IBOutlet var dateLabel: UILabel!
+    @IBOutlet weak var likeButton: UIButton!
+    @IBOutlet weak var cellImage: UIImageView!
+    @IBOutlet weak var dateLabel: UILabel!
     @IBAction func likeButtonClicked(_ sender: Any) {
         delegate?.imageListCellDidTapLike(self)
     }
     
-    // MARK: - Static property
+    // MARK: - Static Properties
     static let reuseIdentifier = "ImageListCell"
     weak var delegate: ImagesListCellDelegate?
     

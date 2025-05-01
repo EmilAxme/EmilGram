@@ -10,13 +10,16 @@ struct Photo {
     let largeImageURL: String
     let isLiked: Bool
     
+    private static let isoDateFormatter: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        return formatter
+    }()
+    
     // MARK: - Init's
     init(from result: PhotoResult) {
         self.id = result.id
         self.size = CGSize(width: result.width, height: result.height)
-        
-        let dateFormatter = ISO8601DateFormatter()
-        self.createdAt = result.createdAt.flatMap { dateFormatter.date(from: $0) }
+        self.createdAt = result.createdAt.flatMap { Self.isoDateFormatter.date(from: $0) }
         
         self.welcomeDescription = result.description
         self.thumbImageURL = result.urls.thumb

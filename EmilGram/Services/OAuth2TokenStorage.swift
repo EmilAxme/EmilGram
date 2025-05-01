@@ -2,11 +2,12 @@ import Foundation
 import SwiftKeychainWrapper
 
 final class OAuth2TokenStorage {
+    //MARK: - Singleton
     static let shared = OAuth2TokenStorage()
     private init() {}
     
+    //MARK: - Properties
     let tokenKey = "token"
-    
     var token : String? {
         get {
             KeychainWrapper.standard.string(forKey: tokenKey)
