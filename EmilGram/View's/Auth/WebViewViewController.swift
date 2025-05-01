@@ -2,7 +2,11 @@ import UIKit
 import WebKit
 
 final class WebViewViewController: UIViewController {
-    //MARK: - Property's
+    //MARK: - Properties
+    private var estimatedProgressObservation: NSKeyValueObservation?
+    
+    weak var delegate: WebViewViewControllerDelegate?
+    //MARK: - Lazy Properties
     private lazy var progressView: UIProgressView = {
         var progressView = UIProgressView()
         view.addToView(progressView)
@@ -16,10 +20,6 @@ final class WebViewViewController: UIViewController {
         WKWebView.backgroundColor = .white
         return WKWebView
     }()
-    
-    private var estimatedProgressObservation: NSKeyValueObservation?
-    
-    weak var delegate: WebViewViewControllerDelegate?
     //MARK: - Lifecycle
     override func viewDidLoad() {
         webView.navigationDelegate = self
@@ -42,7 +42,7 @@ final class WebViewViewController: UIViewController {
         progressView.progress = Float(webView.estimatedProgress)
         progressView.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
     }
-    //MARK: - Private function's
+    //MARK: - Private functions
     private func setupUI() {
         NSLayoutConstraint.activate([
             webView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),

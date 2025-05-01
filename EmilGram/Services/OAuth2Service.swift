@@ -15,8 +15,9 @@ final class OAuth2Service {
     private var lastCode: String?
     
     private var authToken: String?
+    private let oAuth2TokenStorage = OAuth2TokenStorage.shared
     
-    //MARK: - Function's
+    //MARK: - Functions
     func fetchOAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
         guard lastCode != code else {
@@ -32,16 +33,17 @@ final class OAuth2Service {
             return
         }
 
-        let task = urlSession.objectTask(for: request) { (result: Result<OAuthTokenResponseBody, Error>) in
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
+            guard let self else { return }
             
             switch result {
             case .success(let tokenResponse):
-                OAuth2TokenStorage.shared.token = tokenResponse.accessToken
+                oAuth2TokenStorage.token = tokenResponse.accessToken
                 completion(.success(tokenResponse.accessToken))
 
             case .failure(let error):
                 if let error = error as? NetworkError {
-                    handleNetworkError(error, service: "[OAuth2Service.fetchOAuthToken]", fallbackToken: OAuth2TokenStorage.shared.token, completion: completion)
+                    handleNetworkError(error, service: "[OAuth2Service.fetchOAuthToken]", fallbackToken: oAuth2TokenStorage.token, completion: completion)
                 } else {
                     print("[OAuth2Service.fetchOAuthToken]: Error - Неизвестная ошибка: \(error.localizedDescription)")
                     completion(.failure(error))
@@ -53,6 +55,7 @@ final class OAuth2Service {
         task.resume()
     }
     
+    //MARK: - Private Functions
     private func makeRequest(code: String) -> URLRequest? {
         let baseUrl = Constants.defaultBaseURL?.appendingPathComponent("oauth/token")
         guard let baseUrl else {

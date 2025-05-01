@@ -7,7 +7,7 @@ enum NetworkError: Error {
     case urlSessionError
 }
 
-// MARK: - Extension's
+// MARK: - Extensions
 extension URLSession {
     func data(
         for request: URLRequest,
@@ -75,7 +75,7 @@ extension URLSession {
     }
 }
 
-// MARK: - Handle function
+// MARK: - Handle Properties
 func handleNetworkError<T>(
     _ error: NetworkError,
     service: String,

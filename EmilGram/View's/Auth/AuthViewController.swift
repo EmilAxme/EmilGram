@@ -18,7 +18,7 @@ final class AuthViewController: UIViewController {
         return imageView
     }()
     
-    // MARK: - Override function's
+    //MARK: - LifeCycle
     override func viewDidLoad() {
         view.inputViewController?.modalPresentationStyle = .fullScreen
         view.backgroundColor = UIColor(named: "YP Black (iOS)")
@@ -29,7 +29,7 @@ final class AuthViewController: UIViewController {
         
         super.viewDidLoad()
     }
-    
+    //MARK: - Override functions
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showWebViewSegueIdentifier {
             guard
@@ -81,7 +81,7 @@ final class AuthViewController: UIViewController {
     private func makeErrorAlert(title: String, message: String?, buttonText: String) {
         let errorAlert = AlertModel(title: title,
                                     message: message ?? nil,
-                                    buttonText: buttonText)
+                                    buttonText: buttonText, secondButtonText: nil)
         
         guard let alert else { return }
         

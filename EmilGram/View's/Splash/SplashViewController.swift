@@ -16,7 +16,7 @@ final class SplashViewController: UIViewController {
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
     
-    //MARK: - Override function
+    //MARK: - Override functions
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(named: "YP Black (iOS)")
@@ -35,13 +35,13 @@ final class SplashViewController: UIViewController {
         }
     }
     
-    // MARK: - Private function's
-    func showNetworkError(title: String, message: String, buttonText: String, completion: (() -> Void)? = nil) {
+    // MARK: - Private functions
+    private func showNetworkError(title: String, message: String, buttonText: String, completion: (() -> Void)? = nil) {
         
         let errorAlert = AlertModel(
             title: title,
             message: message,
-            buttonText: buttonText,
+            buttonText: buttonText, secondButtonText: nil,
             completion: completion
         )
         
@@ -59,7 +59,7 @@ final class SplashViewController: UIViewController {
         window.rootViewController = tabBarController
     }
     
-    func setupUI() {
+    private func setupUI() {
         view.addSubview(logoImageView)
 
         NSLayoutConstraint.activate([
@@ -148,7 +148,7 @@ extension SplashViewController: AuthViewControllerDelegate {
                 self.switchToTabBarController()
             case .failure(let error):
                 print("Ошибка при получении токена: \(error)")
-                if OAuth2TokenStorage.shared.token != nil {
+                if oAuth2TokenStorage.token != nil {
                     print("Несмотря на ошибку, токен уже сохранён. Переход в ленту.")
                     self.switchToTabBarController()
                 } else {

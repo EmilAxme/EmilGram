@@ -13,7 +13,7 @@ struct Profile {
     }
     var bio: String?
     
-    //MARK: - Init's
+    //MARK: - Inits
     init(username: String, name: String, firstName: String, lastName: String, bio: String?) {
         self.username = username
         self.name = name
