@@ -1,11 +1,19 @@
 import UIKit
 import WebKit
 
-final class WebViewViewController: UIViewController {
+// MARK: - Protocol
+public protocol WebViewViewControllerProtocol: AnyObject {
+    var presenter: WebViewPresenterProtocol? { get set }
+    func load(request: URLRequest)
+}
+
+// MARK: - Final Class
+final class WebViewViewController: UIViewController & WebViewViewControllerProtocol {
     //MARK: - Properties
     private var estimatedProgressObservation: NSKeyValueObservation?
     
     weak var delegate: WebViewViewControllerDelegate?
+    var presenter: WebViewPresenterProtocol?
     //MARK: - Lazy Properties
     private lazy var progressView: UIProgressView = {
         var progressView = UIProgressView()
@@ -22,9 +30,11 @@ final class WebViewViewController: UIViewController {
     }()
     //MARK: - Lifecycle
     override func viewDidLoad() {
+        super.viewDidLoad()
+        
         webView.navigationDelegate = self
         setupUI()
-        loadAuthView()
+        presenter?.viewDidLoad()
         
         estimatedProgressObservation = webView.observe(
             \.estimatedProgress,
@@ -33,8 +43,6 @@ final class WebViewViewController: UIViewController {
                  guard let self = self else { return }
                  self.updateProgress()
              })
-        
-        super.viewDidLoad()
     }
     
     //MARK: - Observe Object's
@@ -55,28 +63,11 @@ final class WebViewViewController: UIViewController {
             progressView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
-    
-    private func loadAuthView() {
-        guard var urlComponents = URLComponents(string: WebViewConstants.unsplashAuthorizeURLString) else {
-            print("Не удалось загрузить url страницы авторизации")
-            return
-        }
-        
-        urlComponents.queryItems = [
-            URLQueryItem(name: "client_id", value: Constants.accessKey),
-            URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
-            URLQueryItem(name: "response_type", value: "code"),
-            URLQueryItem(name: "scope", value: Constants.accessScope)
-        ]
-        
-        guard let url = urlComponents.url else {
-            print("Не удалось совершить запрос")
-            return
-        }
-        
-        let request = URLRequest(url: url)
+    //MARK: - functions
+    func load(request: URLRequest) {
         webView.load(request)
     }
+
 }
 
     //MARK: - ENUM
