@@ -64,14 +64,14 @@ final class ProfileViewController: UIViewController{
         guard !shimmerAdded else { return }
         shimmerAdded = true
 
-        addShimmer(to: profileImageView, cornerRadius: 35)
-        addShimmer(to: nameLabel)
-        addShimmer(to: userIDLabel)
-        addShimmer(to: descriptionLabel)
+        shimmerService.addShimmer(to: profileImageView, cornerRadius: 35)
+        shimmerService.addShimmer(to: nameLabel)
+        shimmerService.addShimmer(to: userIDLabel)
+        shimmerService.addShimmer(to: descriptionLabel)
         
         if profileImageService.avatarURL != nil {
             updateAvatar()
-            removeShimmerLayers()
+            shimmerService.removeShimmerLayers()
         }
 
     }
@@ -135,36 +135,6 @@ final class ProfileViewController: UIViewController{
         let imageView = UIImageView()
         view.addToView(imageView)
         return imageView
-    }
-    
-    private func addShimmer(to view: UIView, cornerRadius: CGFloat = 0) {
-        let gradient = CAGradientLayer()
-        gradient.frame = view.bounds 
-        gradient.locations = [0, 0.1, 0.3]
-        gradient.colors = [
-            UIColor(red: 0.682, green: 0.686, blue: 0.706, alpha: 1).cgColor,
-            UIColor(red: 0.531, green: 0.533, blue: 0.553, alpha: 1).cgColor,
-            UIColor(red: 0.431, green: 0.433, blue: 0.453, alpha: 1).cgColor
-        ]
-        gradient.startPoint = CGPoint(x: 0, y: 0.5)
-        gradient.endPoint = CGPoint(x: 1, y: 0.5)
-        gradient.cornerRadius = cornerRadius
-        view.layer.addSublayer(gradient)
-        animationLayers.insert(gradient)
-
-        let animation = CABasicAnimation(keyPath: "locations")
-        animation.fromValue = [0, 0.1, 0.3]
-        animation.toValue = [0.7, 0.8, 1]
-        animation.duration = 1
-        animation.repeatCount = .infinity
-        gradient.add(animation, forKey: "shimmer")
-    }
-    
-    private func removeShimmerLayers() {
-        for layer in animationLayers {
-            layer.removeFromSuperlayer()
-        }
-        animationLayers.removeAll()
     }
     
     // MARK: - private functions 

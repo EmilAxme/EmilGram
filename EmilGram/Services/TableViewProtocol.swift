@@ -84,9 +84,10 @@ extension ImagesListViewController {
         cell.cellImage.kf.indicatorType = .activity
         cell.cellImage.kf.setImage(with: url, placeholder: UIImage(named: "placeholder"), options: nil) { [weak self] _ in
             guard let self else { return }
-            self.removeShimmerLayers()
+            shimmerService.removeShimmerLayers()
         }
-        addShimmer(to: cell.cellImage)
+//        addShimmer(to: cell.cellImage)
+        shimmerService.addShimmer(to: cell.cellImage)
         let likeImage = photos[indexPath.row].isLiked ? UIImage(named: "LikeButtonActive") : UIImage(named: "LikeButton")
         cell.likeButton.setImage(likeImage, for: .normal)
         cell.delegate = self
