@@ -7,6 +7,7 @@ final class ImagesListViewController: UIViewController {
     
     let showSingleImageSegueIdentifier = "ShowSingleImage"
     let imagesListService = ImagesListService.shared
+    let shimmerService = ShimmerService.shared
     
     var photos: [Photo] = []
     var animationLayers = Set<CALayer>()
