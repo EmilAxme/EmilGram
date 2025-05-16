@@ -29,10 +29,13 @@ final class WebViewTests: XCTestCase {
         viewControllerSpy.presenter = presenter
         presenter.view = viewControllerSpy
         
+        
         //when
         presenter.viewDidLoad()
         
-        XCTAssertTrue(viewControllerSpy.loadRequestCalled) 
+        
+        //then
+        XCTAssertTrue(viewControllerSpy.loadRequestCalled)
     }
     
     func testProgressVisibleLessThenOne() {

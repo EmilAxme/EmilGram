@@ -63,8 +63,6 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
         super.viewDidLoad()
         
         alert = AlertPresenter(delegate: self)
-//        guard let profile = profileService.profile else { return }
-//        updateProfileDetails(profile: profile)
         setupUI()
         
         presenter?.viewDidLoad()
@@ -79,20 +77,11 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
         shimmerService.addShimmer(to: nameLabel)
         shimmerService.addShimmer(to: userIDLabel)
         shimmerService.addShimmer(to: descriptionLabel)
-        
-//        if profileImageService.avatarURL != nil {
-//            updateAvatar()
-//            shimmerService.removeShimmerLayers()
-//        }
 
     }
     
-    // MARK: - Setup UI
-    func updateAvatar(url: URL) {
-//        guard
-//            let profileImageURL = profileImageService.avatarURL,
-//            let url = URL(string: profileImageURL)
-//        else { return }
+    // MARK: - UI Functions
+    func updateAvatar(url: URL){
         let processor = RoundCornerImageProcessor(cornerRadius: 50)
         profileImageView.kf.setImage(with: url, options: [.processor(processor)]) { [weak self] _ in
             guard let self else { return }
@@ -126,10 +115,7 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
             logOutButton.centerYAnchor.constraint(equalTo: profileImageView.centerYAnchor)
         ])
     }
-    func configure(_ presenter: ProfilePresenterProtocol) {
-        self.presenter = presenter
-        self.presenter?.view = self
-    }
+    
     
     // MARK: - Helpers
     
@@ -153,7 +139,12 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
         return imageView
     }
     
-    // MARK: - private functions 
+    // MARK: - functions 
+    func configure(_ presenter: ProfilePresenterProtocol) {
+            self.presenter = presenter
+            self.presenter?.view = self
+        }
+    
     func showAuthController() {
         let storyboard = UIStoryboard(name: "Main", bundle: .main)
         guard let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else {
@@ -165,10 +156,7 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
         authViewController.modalPresentationStyle = .fullScreen
         present(authViewController, animated: true)
     }
-    @objc private func didTapLogoutButton(sender: UIButton) {
-//        showLogoutAlert(title: "Пока, пока!", message: "Уверены, что хотите выйти?", firstButtonText: "Да", firstButtonCompletion: logOut, secondButtonText: "Нет")
-        presenter?.didTapLogout()
-    }
+    
     func showLogoutAlert(title: String, message: String, firstButtonText: String, firstButtonCompletion: (() -> Void)? = nil, secondButtonText: String) {
         
         let errorAlert = AlertModel(
@@ -183,10 +171,9 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
         alert.presentAlert(with: errorAlert)
     }
     
-//    private func logOut() {
-//        profileLogoutService.logout()
-//        showAuthController()
-//    }
+    @objc func didTapLogoutButton(sender: UIButton) {
+            presenter?.didTapLogout()
+        }
 }
 
 //MARK: - Extension's
