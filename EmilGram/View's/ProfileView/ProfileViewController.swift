@@ -12,6 +12,8 @@ protocol ProfileViewControllerProtocol: AnyObject, AuthViewControllerDelegate {
 
 final class ProfileViewController: UIViewController & ProfileViewControllerProtocol {
     //MARK: - Properties
+    var presenter: ProfilePresenterProtocol?
+    
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
     private let profileLogoutService = ProfileLogoutService.shared
@@ -19,8 +21,7 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
     private var profileImageServiceObserver: NSObjectProtocol?
     private var alert: AlertPresenter?
     private var shimmerAdded = false
-    var presenter: ProfilePresenterProtocol?
-
+    
     // MARK: - View Properties
     private lazy var nameLabel: UILabel = {
         let nameLabel = createLabel(
@@ -141,9 +142,9 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
     
     // MARK: - functions 
     func configure(_ presenter: ProfilePresenterProtocol) {
-            self.presenter = presenter
-            self.presenter?.view = self
-        }
+        self.presenter = presenter
+        self.presenter?.view = self
+    }
     
     func showAuthController() {
         let storyboard = UIStoryboard(name: "Main", bundle: .main)

@@ -12,10 +12,11 @@ public protocol WebViewViewControllerProtocol: AnyObject {
 // MARK: - Final Class
 final class WebViewViewController: UIViewController & WebViewViewControllerProtocol {
     //MARK: - Properties
-    private var estimatedProgressObservation: NSKeyValueObservation?
+    weak var presenter: WebViewPresenterProtocol?
     
     weak var delegate: WebViewViewControllerDelegate?
-    var presenter: WebViewPresenterProtocol?
+    
+    private var estimatedProgressObservation: NSKeyValueObservation?
     //MARK: - Lazy Properties
     private lazy var progressView: UIProgressView = {
         var progressView = UIProgressView()
