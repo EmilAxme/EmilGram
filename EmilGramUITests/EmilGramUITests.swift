@@ -8,36 +8,93 @@
 import XCTest
 
 final class EmilGramUITests: XCTestCase {
+    private let app = XCUIApplication()
+    
 
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
-        continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    @MainActor
-    func testExample() throws {
-        // UI tests must launch the application that they test.
-        let app = XCUIApplication()
+        try super.setUpWithError()
+        
         app.launch()
-
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        
+        continueAfterFailure = false
     }
+    
+    
+    func testAuth() throws {
+        
+        app.buttons["Authenticate"].tap()
+         
+        let webView = app.webViews["WebViewVC"]
+        
+        XCTAssertTrue(webView.waitForExistence(timeout: 5))
+        
+        let loginTextField = webView.descendants(matching: .textField).element
+        XCTAssertTrue(loginTextField.waitForExistence(timeout: 5))
+        loginTextField.tap()
+        loginTextField.typeText("email")
+        XCUIDevice.shared.press(.home)
+        XCUIDevice.shared.press(.home) // дважды – свернуть и вернуться
+        XCUIApplication().activate()    // вернуться в приложение
+        
+        let passwordTextField = webView.descendants(matching: .secureTextField).element
+        XCTAssertTrue(passwordTextField.waitForExistence(timeout: 5))
+        passwordTextField.tap()
+        passwordTextField.typeText("password")
+        XCUIDevice.shared.press(.home)
+        XCUIDevice.shared.press(.home) // дважды – свернуть и вернуться
+        XCUIApplication().activate()    // вернуться в приложение
+        
+        XCTAssertTrue(webView.waitForExistence(timeout: 5))
+        webView.buttons["Login"].tap()
+        
+        
+        let tablesQuery = app.tables
+        let cell = tablesQuery.children(matching: .cell).element(boundBy: 0)
+        XCTAssertTrue(cell.waitForExistence(timeout: 5))
 
-    @MainActor
-    func testLaunchPerformance() throws {
-        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
-            // This measures how long it takes to launch your application.
-            measure(metrics: [XCTApplicationLaunchMetric()]) {
-                XCUIApplication().launch()
-            }
-        }
+        print(app.debugDescription)
+    }
+    
+    func testFeed() throws {
+        let tablesQuery = app.tables
+
+        let firstCell = tablesQuery.cells.element(boundBy: 0)
+        XCTAssertTrue(firstCell.waitForExistence(timeout: 5))
+        firstCell.swipeUp()
+
+        let secondCell = tablesQuery.cells.element(boundBy: 1)
+        XCTAssertTrue(secondCell.waitForExistence(timeout: 5))
+
+        let likeButton = secondCell.buttons["like button"]
+        XCTAssertTrue(likeButton.waitForExistence(timeout: 5))
+        likeButton.tap()
+        likeButton.tap()
+
+        secondCell.tap()
+
+        let image = app.scrollViews.images.element(boundBy: 0)
+        XCTAssertTrue(image.waitForExistence(timeout: 5))
+        image.pinch(withScale: 3, velocity: 1)
+        image.pinch(withScale: 0.5, velocity: -1)
+
+        let backButton = app.buttons["backButton"]
+        XCTAssertTrue(backButton.waitForExistence(timeout: 5))
+        backButton.tap()
+    }
+    
+    func testProfile() throws {
+        let tablesQuery = app.tables
+        let firstCell = tablesQuery.cells.element(boundBy: 0)
+        XCTAssertTrue(firstCell.waitForExistence(timeout: 5))
+        
+        app.tabBars.buttons.element(boundBy: 1).tap()
+        
+        XCTAssertTrue(app.staticTexts["Name Lastname"].exists)
+        XCTAssertTrue(app.staticTexts["@username"].exists)
+        
+        app.buttons["logOutButton"].tap()
+        app.alerts["Пока, пока!"].scrollViews.otherElements.buttons["Да"].tap()
+        
+        XCTAssertTrue(app.buttons["Authenticate"].waitForExistence(timeout: 5))
     }
 }

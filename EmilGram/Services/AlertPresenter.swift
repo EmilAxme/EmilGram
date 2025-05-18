@@ -26,6 +26,10 @@ final class AlertPresenter {
             }
             alert.addAction(secondAction)
         }
-        delegate?.present(alert, animated: true)
+        guard let delegate = delegate else {
+            print("Delegate is nil")
+            return
+        }
+        delegate.present(alert, animated: true)
     }
 }

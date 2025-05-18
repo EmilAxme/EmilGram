@@ -1,16 +1,27 @@
 import UIKit
 import Kingfisher
 
-final class ProfileViewController: UIViewController{
+protocol ProfileViewControllerProtocol: AnyObject, AuthViewControllerDelegate {
+    var presenter: ProfilePresenterProtocol? { get set }
+    
+    func showAuthController()
+    func showLogoutAlert(title: String, message: String, firstButtonText: String, firstButtonCompletion: (() -> Void)?, secondButtonText: String)
+    func updateAvatar(url: URL)
+    func updateProfileDetails(profile: Profile)
+}
+
+final class ProfileViewController: UIViewController & ProfileViewControllerProtocol {
     //MARK: - Properties
+    var presenter: ProfilePresenterProtocol?
+    
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
     private let profileLogoutService = ProfileLogoutService.shared
+    private let shimmerService = ShimmerService.shared
     private var profileImageServiceObserver: NSObjectProtocol?
     private var alert: AlertPresenter?
     private var shimmerAdded = false
     
-    var animationLayers = Set<CALayer>()
     // MARK: - View Properties
     private lazy var nameLabel: UILabel = {
         let nameLabel = createLabel(
@@ -51,47 +62,42 @@ final class ProfileViewController: UIViewController{
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        logOutButton.accessibilityIdentifier = "logOutButton"
+        nameLabel.accessibilityIdentifier = "Name Lastname"
+        userIDLabel.accessibilityIdentifier = "@username"
         alert = AlertPresenter(delegate: self)
-        guard let profile = profileService.profile else { return }
-        updateProfileDetails(profile: profile)
         setupUI()
+        
+        presenter?.viewDidLoad()
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
+        profileImageView.layer.cornerRadius = profileImageView.frame.width / 2
+        
         guard !shimmerAdded else { return }
         shimmerAdded = true
 
-        addShimmer(to: profileImageView, cornerRadius: 35)
-        addShimmer(to: nameLabel)
-        addShimmer(to: userIDLabel)
-        addShimmer(to: descriptionLabel)
-        
-        if profileImageService.avatarURL != nil {
-            updateAvatar()
-            removeShimmerLayers()
-        }
+        shimmerService.addShimmer(to: profileImageView, cornerRadius: 50)
+        shimmerService.addShimmer(to: nameLabel)
+        shimmerService.addShimmer(to: userIDLabel)
+        shimmerService.addShimmer(to: descriptionLabel)
 
     }
     
-    // MARK: - Setup UI
-    private func updateAvatar() {
-        guard
-            let profileImageURL = profileImageService.avatarURL,
-            let url = URL(string: profileImageURL)
-        else { return }
-        let processor = RoundCornerImageProcessor(cornerRadius: 50)
-        profileImageView.kf.setImage(with: url, options: [.processor(processor)])
+    // MARK: - UI Functions
+    func updateAvatar(url: URL){
+        profileImageView.kf.setImage(with: url) { [weak self] _ in
+            guard let self else { return }
+            self.shimmerService.removeShimmerLayers()
+        }
     }
     
-    private func updateProfileDetails(profile: Profile) {
+    func updateProfileDetails(profile: Profile) {
         nameLabel.text = profile.name
         descriptionLabel.text = profile.bio
         userIDLabel.text = profile.loginName
     }
-    
-    
     
     private func setupUI() {
         view.backgroundColor = UIColor(named: "YP Black (iOS)")
@@ -114,6 +120,7 @@ final class ProfileViewController: UIViewController{
         ])
     }
     
+    
     // MARK: - Helpers
     
     private func addToView(_ UI: UIView) {
@@ -132,42 +139,20 @@ final class ProfileViewController: UIViewController{
     
     private func createImageView() -> UIImageView {
         let imageView = UIImageView()
-        view.addToView(imageView)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFill
+        view.addSubview(imageView)
         return imageView
     }
     
-    private func addShimmer(to view: UIView, cornerRadius: CGFloat = 0) {
-        let gradient = CAGradientLayer()
-        gradient.frame = view.bounds 
-        gradient.locations = [0, 0.1, 0.3]
-        gradient.colors = [
-            UIColor(red: 0.682, green: 0.686, blue: 0.706, alpha: 1).cgColor,
-            UIColor(red: 0.531, green: 0.533, blue: 0.553, alpha: 1).cgColor,
-            UIColor(red: 0.431, green: 0.433, blue: 0.453, alpha: 1).cgColor
-        ]
-        gradient.startPoint = CGPoint(x: 0, y: 0.5)
-        gradient.endPoint = CGPoint(x: 1, y: 0.5)
-        gradient.cornerRadius = cornerRadius
-        view.layer.addSublayer(gradient)
-        animationLayers.insert(gradient)
-
-        let animation = CABasicAnimation(keyPath: "locations")
-        animation.fromValue = [0, 0.1, 0.3]
-        animation.toValue = [0.7, 0.8, 1]
-        animation.duration = 1
-        animation.repeatCount = .infinity
-        gradient.add(animation, forKey: "shimmer")
+    // MARK: - functions 
+    func configure(_ presenter: ProfilePresenterProtocol) {
+        self.presenter = presenter
+        self.presenter?.view = self
     }
     
-    private func removeShimmerLayers() {
-        for layer in animationLayers {
-            layer.removeFromSuperlayer()
-        }
-        animationLayers.removeAll()
-    }
-    
-    // MARK: - private functions 
-    private func showAuthController() {
+    func showAuthController() {
         let storyboard = UIStoryboard(name: "Main", bundle: .main)
         guard let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else {
             print("Не удалось создать AuthViewController")
@@ -178,10 +163,8 @@ final class ProfileViewController: UIViewController{
         authViewController.modalPresentationStyle = .fullScreen
         present(authViewController, animated: true)
     }
-    @objc private func didTapLogoutButton(sender: UIButton) {
-        showLogoutAlert(title: "Пока, пока!", message: "Уверены, что хотите выйти?", firstButtonText: "Да", firstButtonCompletion: logOut, secondButtonText: "Нет")
-    }
-    private func showLogoutAlert(title: String, message: String, firstButtonText: String, firstButtonCompletion: (() -> Void)? = nil, secondButtonText: String) {
+    
+    func showLogoutAlert(title: String, message: String, firstButtonText: String, firstButtonCompletion: (() -> Void)? = nil, secondButtonText: String) {
         
         let errorAlert = AlertModel(
             title: title,
@@ -195,10 +178,9 @@ final class ProfileViewController: UIViewController{
         alert.presentAlert(with: errorAlert)
     }
     
-    private func logOut() {
-        profileLogoutService.logout()
-        showAuthController()
-    }
+    @objc func didTapLogoutButton(sender: UIButton) {
+            presenter?.didTapLogout()
+        }
 }
 
 //MARK: - Extension's
