@@ -20,14 +20,15 @@ final class AuthViewController: UIViewController {
     
     //MARK: - LifeCycle
     override func viewDidLoad() {
+        super.viewDidLoad()
+        
         view.inputViewController?.modalPresentationStyle = .fullScreen
         view.backgroundColor = UIColor(named: "YP Black (iOS)")
+        
         setupUI()
         configureBackButton()
         
         alert = AlertPresenter(delegate: self)
-        
-        super.viewDidLoad()
     }
     //MARK: - Override functions
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
