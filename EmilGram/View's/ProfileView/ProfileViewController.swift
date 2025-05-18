@@ -62,7 +62,9 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        logOutButton.accessibilityIdentifier = "logOutButton"
+        nameLabel.accessibilityIdentifier = "Name Lastname"
+        userIDLabel.accessibilityIdentifier = "@username"
         alert = AlertPresenter(delegate: self)
         setupUI()
         

@@ -97,6 +97,7 @@
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h1j-va-8QL" userLabel="Like Button">
                                                     <rect key="frame" x="382" y="4" width="42" height="42"/>
+                                                    <accessibility key="accessibilityConfiguration" identifier="like button off"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="42" id="LTH-Pv-Hfd"/>
                                                         <constraint firstAttribute="width" constant="42" id="W1M-7V-qo5"/>
@@ -156,7 +157,7 @@
         <!--Web View View Controller-->
         <scene sceneID="Uas-w2-Izz">
             <objects>
-                <viewController storyboardIdentifier="ShowWebView" id="zhk-9p-Mfd" customClass="WebViewViewController" customModule="EmilGram" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="WebViewVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="zhk-9p-Mfd" customClass="WebViewViewController" customModule="EmilGram" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="W9M-pf-C2W">
                         <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -193,6 +194,7 @@
                             </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gXt-ji-OEu" userLabel="backButton">
                                 <rect key="frame" x="9" y="11" width="24" height="24"/>
+                                <accessibility key="accessibilityConfiguration" identifier="nav back button white"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="24" id="HXx-mT-4pO"/>
                                     <constraint firstAttribute="width" constant="24" id="cIP-xB-Ua7"/>
@@ -232,6 +234,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="Njg-nc-mgb"/>
                     <connections>
+                        <outlet property="backButton" destination="gXt-ji-OEu" id="Xa8-ST-F9I"/>
                         <outlet property="scrollView" destination="Kg7-nP-H88" id="sYw-iJ-Li5"/>
                         <outlet property="singleImage" destination="0Ig-94-zLy" id="caJ-nf-yc5"/>
                     </connections>

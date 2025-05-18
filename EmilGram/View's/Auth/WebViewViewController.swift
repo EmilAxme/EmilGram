@@ -14,6 +14,8 @@ final class WebViewViewController: UIViewController & WebViewViewControllerProto
     //MARK: - Properties
     weak var presenter: WebViewPresenterProtocol?
     
+    
+    
     weak var delegate: WebViewViewControllerDelegate?
     
     private var estimatedProgressObservation: NSKeyValueObservation?
@@ -34,17 +36,19 @@ final class WebViewViewController: UIViewController & WebViewViewControllerProto
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        view.backgroundColor = .white
+        guard let presenter = presenter else { return }
         webView.navigationDelegate = self
         setupUI()
-        presenter?.viewDidLoad()
+        presenter.viewDidLoad()
+        webView.accessibilityIdentifier = "WebViewVC"
         
         estimatedProgressObservation = webView.observe(
             \.estimatedProgress,
              options: [.new],
              changeHandler: { [weak self] _, _ in
                  guard let self = self else { return }
-                 presenter?.didUpdateProgressValue(webView.estimatedProgress)
+                 presenter.didUpdateProgressValue(webView.estimatedProgress)
              })
     }
     

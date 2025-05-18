@@ -91,7 +91,9 @@ extension ImagesListViewController: ImagesListViewControllerProtocol {
 
         let likeImageName = viewModel.isLiked ? "LikeButtonActive" : "LikeButton"
         cell.likeButton.setImage(UIImage(named: likeImageName), for: .normal)
-
+        cell.likeButton.accessibilityIdentifier = "like button"
+        
         cell.delegate = self
+        
     }
 }

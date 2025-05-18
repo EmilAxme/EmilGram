@@ -33,17 +33,16 @@ final class AuthViewController: UIViewController {
     //MARK: - Override functions
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showWebViewSegueIdentifier {
-            guard
-                let webViewViewController = segue.destination as? WebViewViewController
-            else {
-                assertionFailure("Failed to prepare for \(showWebViewSegueIdentifier)")
-                return
-            }
             let authHelper = AuthHelper()
-            let webViewPresenter = WebViewPresenter(authHelper: authHelper)
-            webViewViewController.presenter = webViewPresenter
-            webViewPresenter.view = webViewViewController
-            webViewViewController.delegate = self
+            let webVC = WebViewViewController()
+            let presenter = WebViewPresenter(authHelper: authHelper)
+            webVC.presenter = presenter
+            presenter.view = webVC
+            webVC.delegate = self
+            
+            webVC.modalPresentationStyle = .overFullScreen
+            webVC.modalTransitionStyle = .coverVertical
+            present(webVC, animated: true)
         } else {
             super.prepare(for: segue, sender: sender)
         }

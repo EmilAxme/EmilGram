@@ -22,7 +22,7 @@ final class AuthHelper: AuthHelperProtocol {
     }
     
     func authURL() -> URL? {
-        guard var urlComponents = URLComponents(string: configuration.authURLString) else {
+        guard var urlComponents = URLComponents(string: "https://unsplash.com/oauth/authorize") else {
             print("❌ Не удалось создать URLComponents из строки: \(configuration.authURLString)")
             return nil
         }
