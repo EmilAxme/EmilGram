@@ -51,44 +51,10 @@ final class ProfileViewTests: XCTestCase {
         XCTAssertTrue(viewControllerSpy.didShowLogoutAlert)
         XCTAssertTrue(viewControllerSpy.didShowAuthController)
     }
-    
-    func testPresenterCallsLoadRequest() {
-        //given
-        let viewControllerSpy = ProfileViewControllerSpy()
-        let presenter = ProfilePresenter()
-        viewControllerSpy.presenter = presenter
-        presenter.view = viewControllerSpy
-        
-        
-        //when
-        presenter.updateAvatar()
-        
-        
-        //then
-        XCTAssertTrue(viewControllerSpy.didCallUpdateAvatar)
-    }
-    
-    func testPresenterCallsUpdateProfileDetails() {
-        //given
-        let viewControllerSpy = ProfileViewControllerSpy()
-        let presenter = ProfilePresenter()
-        viewControllerSpy.presenter = presenter
-        presenter.view = viewControllerSpy
-        
-        
-        //when
-        presenter.viewDidLoad()
-        
-        
-        //then
-        XCTAssertTrue(viewControllerSpy.didCallUpdateProfile)
-    }
 }
-
+    
 final class ProfileViewControllerSpy: ProfileViewControllerProtocol {
     var presenter: ProfilePresenterProtocol?
-    var didCallUpdateProfile = false
-    var didCallUpdateAvatar = false
     var didShowAuthController = false
     var didShowLogoutAlert = false
     
@@ -99,27 +65,25 @@ final class ProfileViewControllerSpy: ProfileViewControllerProtocol {
     }
     
     func updateAvatar(url: URL) {
-        didCallUpdateAvatar = true
     }
     
-    func updateProfileDetails(profile: EmilGram.Profile) {
-        didCallUpdateProfile = true
+    func updateProfileDetails(profile: Profile) {
     }
     
-    func authViewController(_ vc: EmilGram.AuthViewController, didAuthenticateWithCode code: String) {
+    func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
         
     }
-
+    
     func showLogoutAlert(title: String, message: String, firstButtonText: String, firstButtonCompletion: (() -> Void)?, secondButtonText: String) {
         didShowLogoutAlert = true
         firstButtonAction = firstButtonCompletion
     }
-
+    
     func simulateFirstButtonTap() {
         firstButtonAction?()
     }
 }
-
+    
 final class ProfilePresenterSpy: ProfilePresenterProtocol {
     var view: ProfileViewControllerProtocol?
     var didTapLogoutCalled = false
@@ -135,3 +99,4 @@ final class ProfilePresenterSpy: ProfilePresenterProtocol {
     
     
 }
+

@@ -71,10 +71,12 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
+        profileImageView.layer.cornerRadius = profileImageView.frame.width / 2
+        
         guard !shimmerAdded else { return }
         shimmerAdded = true
 
-        shimmerService.addShimmer(to: profileImageView, cornerRadius: 35)
+        shimmerService.addShimmer(to: profileImageView, cornerRadius: 50)
         shimmerService.addShimmer(to: nameLabel)
         shimmerService.addShimmer(to: userIDLabel)
         shimmerService.addShimmer(to: descriptionLabel)
@@ -83,8 +85,7 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
     
     // MARK: - UI Functions
     func updateAvatar(url: URL){
-        let processor = RoundCornerImageProcessor(cornerRadius: 50)
-        profileImageView.kf.setImage(with: url, options: [.processor(processor)]) { [weak self] _ in
+        profileImageView.kf.setImage(with: url) { [weak self] _ in
             guard let self else { return }
             self.shimmerService.removeShimmerLayers()
         }
@@ -136,7 +137,10 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
     
     private func createImageView() -> UIImageView {
         let imageView = UIImageView()
-        view.addToView(imageView)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFill
+        view.addSubview(imageView)
         return imageView
     }
     
