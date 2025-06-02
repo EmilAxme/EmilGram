@@ -1,12 +1,14 @@
 import UIKit
 
 final class ShimmerService {
-    
+    // MARK: - Singleton
     static let shared = ShimmerService()
     private init() {}
     
+    //MARK: - Private Properties
     private var animationLayers = Set<CALayer>()
     
+    //MARK: - Fucntions
     func addShimmer(to view: UIView, cornerRadius: CGFloat = 0) {
         let gradient = CAGradientLayer()
         gradient.frame = view.bounds

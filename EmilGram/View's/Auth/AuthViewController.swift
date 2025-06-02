@@ -4,11 +4,12 @@ final class AuthViewController: UIViewController {
     //MARK: - Properties
     private let oAuth2Service = OAuth2Service.shared
     private var alert: AlertPresenter?
-
+    let showWebViewSegueIdentifier = "ShowWebView"
+    
     weak var delegate: AuthViewControllerDelegate?
     
     //MARK: - View's
-    let showWebViewSegueIdentifier = "ShowWebView"
+    
     @IBOutlet private var authButton: UIButton!
     
     lazy var unsplashLogo: UIImageView = {

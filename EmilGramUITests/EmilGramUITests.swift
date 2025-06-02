@@ -33,16 +33,16 @@ final class EmilGramUITests: XCTestCase {
         loginTextField.tap()
         loginTextField.typeText("email")
         XCUIDevice.shared.press(.home)
-        XCUIDevice.shared.press(.home) // дважды – свернуть и вернуться
-        XCUIApplication().activate()    // вернуться в приложение
+        XCUIDevice.shared.press(.home) 
+        XCUIApplication().activate()
         
         let passwordTextField = webView.descendants(matching: .secureTextField).element
         XCTAssertTrue(passwordTextField.waitForExistence(timeout: 5))
         passwordTextField.tap()
         passwordTextField.typeText("password")
         XCUIDevice.shared.press(.home)
-        XCUIDevice.shared.press(.home) // дважды – свернуть и вернуться
-        XCUIApplication().activate()    // вернуться в приложение
+        XCUIDevice.shared.press(.home)
+        XCUIApplication().activate()
         
         XCTAssertTrue(webView.waitForExistence(timeout: 5))
         webView.buttons["Login"].tap()

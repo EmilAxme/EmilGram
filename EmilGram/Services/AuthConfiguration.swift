@@ -12,6 +12,7 @@ enum Constants {
     static let defaultAPIBaseURL = URL(string: "https://api.unsplash.com/") ?? nil
 }
 
+// MARK: - Configuration
 struct AuthConfiguration {
     let accessKey: String
     let secretKey: String

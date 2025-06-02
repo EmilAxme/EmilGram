@@ -1,17 +1,20 @@
 import Foundation
-
+// MARK: - Protocol
 protocol AuthHelperProtocol {
     func authRequest() -> URLRequest?
     func code(from url: URL) -> String?
 }
 
+// MARK: - Final Class
 final class AuthHelper: AuthHelperProtocol {
+    //MARK: - Configuration
     let configuration: AuthConfiguration
     
     init(configuration: AuthConfiguration = .standard) {
         self.configuration = configuration
     }
     
+    // MARK: - Functions
     func authRequest() -> URLRequest? {
         guard let url = authURL() else {
             print("❌ Не удалось сформировать URL из urlComponents")
