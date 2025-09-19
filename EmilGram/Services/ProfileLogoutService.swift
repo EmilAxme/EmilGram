@@ -12,6 +12,7 @@ final class ProfileLogoutService {
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
     private let imagesListService = ImagesListService.shared
+    private let oAuthTokenService = OAuth2TokenStorage.shared
     weak var delegate: AuthViewControllerDelegate?
     
     
@@ -22,14 +23,15 @@ final class ProfileLogoutService {
     
     //MARK: - Private Functions
     private func cleanCookies() {
-          HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
-          WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
-             records.forEach { record in
+        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
+            records.forEach { record in
                 WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
-             }
-          }
+            }
+        }
         imagesListService.removePhotosFromDisk()
         profileImageService.removeProfilePhoto()
         profileService.removeProfile()
-       }
+        oAuthTokenService.remove()
+    }
 }

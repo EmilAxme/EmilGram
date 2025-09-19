@@ -4,11 +4,12 @@ final class AuthViewController: UIViewController {
     //MARK: - Properties
     private let oAuth2Service = OAuth2Service.shared
     private var alert: AlertPresenter?
-
+    let showWebViewSegueIdentifier = "ShowWebView"
+    
     weak var delegate: AuthViewControllerDelegate?
     
     //MARK: - View's
-    let showWebViewSegueIdentifier = "ShowWebView"
+    
     @IBOutlet private var authButton: UIButton!
     
     lazy var unsplashLogo: UIImageView = {
@@ -20,25 +21,29 @@ final class AuthViewController: UIViewController {
     
     //MARK: - LifeCycle
     override func viewDidLoad() {
+        super.viewDidLoad()
+        
         view.inputViewController?.modalPresentationStyle = .fullScreen
         view.backgroundColor = UIColor(named: "YP Black (iOS)")
+        
         setupUI()
         configureBackButton()
         
         alert = AlertPresenter(delegate: self)
-        
-        super.viewDidLoad()
     }
     //MARK: - Override functions
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showWebViewSegueIdentifier {
-            guard
-                let webViewViewController = segue.destination as? WebViewViewController
-            else {
-                assertionFailure("Failed to prepare for \(showWebViewSegueIdentifier)")
-                return
-            }
-            webViewViewController.delegate = self
+            let authHelper = AuthHelper()
+            let webVC = WebViewViewController()
+            let presenter = WebViewPresenter(authHelper: authHelper)
+            webVC.presenter = presenter
+            presenter.view = webVC
+            webVC.delegate = self
+            
+            webVC.modalPresentationStyle = .overFullScreen
+            webVC.modalTransitionStyle = .coverVertical
+            present(webVC, animated: true)
         } else {
             super.prepare(for: segue, sender: sender)
         }

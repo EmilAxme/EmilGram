@@ -1,0 +1,55 @@
+import Foundation
+// MARK: - Protocol
+protocol AuthHelperProtocol {
+    func authRequest() -> URLRequest?
+    func code(from url: URL) -> String?
+}
+
+// MARK: - Final Class
+final class AuthHelper: AuthHelperProtocol {
+    //MARK: - Configuration
+    let configuration: AuthConfiguration
+    
+    init(configuration: AuthConfiguration = .standard) {
+        self.configuration = configuration
+    }
+    
+    // MARK: - Functions
+    func authRequest() -> URLRequest? {
+        guard let url = authURL() else {
+            print("❌ Не удалось сформировать URL из urlComponents")
+            return nil
+        }
+        
+        return URLRequest(url: url)
+    }
+    
+    func authURL() -> URL? {
+        guard var urlComponents = URLComponents(string: "https://unsplash.com/oauth/authorize") else {
+            print("❌ Не удалось создать URLComponents из строки: \(configuration.authURLString)")
+            return nil
+        }
+            
+        urlComponents.queryItems = [
+            URLQueryItem(name: "client_id", value: configuration.accessKey),
+            URLQueryItem(name: "redirect_uri", value: configuration.redirectURI),
+            URLQueryItem(name: "response_type", value: "code"),
+            URLQueryItem(name: "scope", value: configuration.accessScope)
+        ]
+            
+        return urlComponents.url
+
+    }
+        
+    func code(from url: URL) -> String? {
+        if let urlComponents = URLComponents(string: url.absoluteString),
+           urlComponents.path == "/oauth/authorize/native",
+           let items = urlComponents.queryItems,
+           let codeItem = items.first(where: { $0.name == "code"})
+        {
+            return codeItem.value
+        } else {
+            return nil
+        }
+    }
+}

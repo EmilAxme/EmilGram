@@ -1,131 +1,99 @@
 import UIKit
+import Kingfisher
+
+protocol ImagesListViewControllerProtocol: AnyObject {
+    var presenter: ImagesListPresenterProtocol? { get set }
+    func showError(title: String, message: String?, buttonText: String, secondButtonText: String?, completion: (() -> Void)?, secondCompletion: (() -> Void)?)
+    func reloadAnimatedTableView(oldCount: Int, newCount: Int)
+    func presentFullScreenImage(at index: Int?)
+}
 
 final class ImagesListViewController: UIViewController {
-    // MARK: - Properties
-    private var imageListServiceObserver: NSObjectProtocol?
-    private var alert: AlertPresenter?
-    
-    let showSingleImageSegueIdentifier = "ShowSingleImage"
-    let imagesListService = ImagesListService.shared
-    
-    var photos: [Photo] = []
-    var animationLayers = Set<CALayer>()
-    
-    lazy var dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .none
-        return formatter
-    }()
-    
-    // MARK: - Outlets
+    var presenter: ImagesListPresenterProtocol?
+
     @IBOutlet var tableView: UITableView!
     
-    //MARK: - Lifecycle
+    private var alert: AlertPresenter?
+    private let shimmerService = ShimmerService.shared
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureTableView()
         alert = AlertPresenter(delegate: self)
+        configureTableView()
+        presenter?.viewDidLoad()
+    }
 
-        imageListServiceObserver = NotificationCenter.default.addObserver(
-            forName: ImagesListService.didChangeNotification,
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
-            guard let self else { return }
-            self.updateTableViewAnimated()
-        }
-        
-        imagesListService.fetchPhotosNextPage { _ in }
-        
+    func configureTableView() {
+        tableView.rowHeight = 200
+        tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
+        tableView.delegate = self
+        tableView.dataSource = self
     }
     
-    //MARK: - Functions
-    
-    func updateTableViewAnimated() {
-        let oldCount = photos.count
-        let newCount = imagesListService.photos.count
-        photos = imagesListService.photos
-        if oldCount != newCount {
-            tableView.performBatchUpdates {
-                let indexPaths = (oldCount..<newCount).map { i in
-                    IndexPath(row: i, section: 0)
-                }
-                tableView.insertRows(at: indexPaths, with: .automatic)
-            } completion: { _ in }
+    func configure(_ presenter: ImagesListPresenterProtocol) {
+        self.presenter = presenter
+    }
+}
+
+extension ImagesListViewController: ImagesListViewControllerProtocol {
+    func reloadAnimatedTableView(oldCount: Int, newCount: Int) {
+        let indexPaths = (oldCount..<newCount).map { IndexPath(row: $0, section: 0) }
+        tableView.performBatchUpdates {
+            tableView.insertRows(at: indexPaths, with: .automatic)
         }
     }
-    
+
     func showError(title: String, message: String?, buttonText: String, secondButtonText: String?, completion: (() -> Void)? = nil, secondCompletion: (() -> Void)? = nil) {
-        let errorAlert = AlertModel(title: title,
-                                    message: message ?? nil,
-                                    buttonText: buttonText, secondButtonText: secondButtonText,
-                                    completion: completion, secondCompletion: secondCompletion)
-        
-        guard let alert else { return }
-        
-        alert.presentAlert(with: errorAlert)
+        let model = AlertModel(title: title, message: message, buttonText: buttonText, secondButtonText: secondButtonText, completion: completion, secondCompletion: secondCompletion)
+        alert?.presentAlert(with: model)
     }
-    
-    func loadFullImage(for viewController: SingleImageViewController, url: URL) {
+
+    func presentFullScreenImage(at index: Int?) {
+        guard let index = index else { return }
+        guard let presenter = presenter else { return }
+        guard let url = URL(string: presenter.photos[index].largeImageURL) else { return }
         let imageView = UIImageView()
         UIBlockingProgressHUD.show()
         imageView.kf.setImage(with: url) { [weak self] result in
             guard let self else { return }
             UIBlockingProgressHUD.dismiss()
-            
             switch result {
             case .success(let imageResult):
-                viewController.image = imageResult.image
+                let storyboard = UIStoryboard(name: "Main", bundle: .main)
+                guard let vc = storyboard.instantiateViewController(withIdentifier: "SingleImageViewController") as? SingleImageViewController else { return }
+                vc.image = imageResult.image
+                present(vc, animated: true)
             case .failure:
                 self.showError(
                     title: "Что-то пошло не так",
                     message: "Попробовать ещё раз?",
                     buttonText: "Не надо",
-                    secondButtonText: "Повторить",
+                    secondButtonText: "Повторить", completion: nil,
                     secondCompletion: {
-                        self.loadFullImage(for: viewController, url: url)
+                        self.presentFullScreenImage(at: index)
                     }
                 )
             }
         }
     }
-     
     
-    func addShimmer(to view: UIView, cornerRadius: CGFloat = 0) {
-        let gradient = CAGradientLayer()
-        gradient.frame = view.bounds
-        gradient.locations = [0, 0.1, 0.3]
-        gradient.colors = [
-            UIColor(red: 0.682, green: 0.686, blue: 0.706, alpha: 1).cgColor,
-            UIColor(red: 0.531, green: 0.533, blue: 0.553, alpha: 1).cgColor,
-            UIColor(red: 0.431, green: 0.433, blue: 0.453, alpha: 1).cgColor
-        ]
-        gradient.startPoint = CGPoint(x: 0, y: 0.5)
-        gradient.endPoint = CGPoint(x: 1, y: 0.5)
-        gradient.cornerRadius = cornerRadius
-        view.layer.addSublayer(gradient)
-        animationLayers.insert(gradient)
+    func configure(_ cell: ImagesListCell, at index: Int) {
+        guard let presenter = presenter else { return }
+        let viewModel = presenter.viewModel(for: index)
 
-        let animation = CABasicAnimation(keyPath: "locations")
-        animation.fromValue = [0, 0.1, 0.3]
-        animation.toValue = [0.7, 0.8, 1]
-        animation.duration = 1
-        animation.repeatCount = .infinity
-        gradient.add(animation, forKey: "shimmer")
-    }
-    
-    func removeShimmerLayers() {
-        for layer in animationLayers {
-            layer.removeFromSuperlayer()
+        cell.dateLabel.text = viewModel.dateText
+
+        cell.cellImage.kf.indicatorType = .activity
+        shimmerService.addShimmer(to: cell.cellImage)
+        cell.cellImage.kf.setImage(with: viewModel.imageURL, placeholder: UIImage(named: "placeholder")) { [weak self] _ in
+            self?.shimmerService.removeShimmerLayers()
         }
-        animationLayers.removeAll()
+
+        let likeImageName = viewModel.isLiked ? "LikeButtonActive" : "LikeButton"
+        cell.likeButton.setImage(UIImage(named: likeImageName), for: .normal)
+        cell.likeButton.accessibilityIdentifier = "like button"
+        
+        cell.delegate = self
+        
     }
-    
-    //MARK: - Private Functions
-    func configureTableView() {
-        tableView.rowHeight = 200
-        tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
-    }
-    
 }

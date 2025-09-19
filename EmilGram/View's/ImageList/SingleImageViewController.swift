@@ -18,6 +18,7 @@ final class SingleImageViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: - Outlets
     @IBOutlet private var scrollView: UIScrollView!
+    @IBOutlet private var backButton: UIButton!
     @IBOutlet private var singleImage: UIImageView! {
         didSet {
                 guard isViewLoaded else { return }
@@ -30,6 +31,7 @@ final class SingleImageViewController: UIViewController, UIScrollViewDelegate {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        backButton.accessibilityIdentifier = "backButton"
         
         guard let image = image else { return }
         singleImage.image = image

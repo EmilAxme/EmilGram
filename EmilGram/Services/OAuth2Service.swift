@@ -57,11 +57,7 @@ final class OAuth2Service {
     
     //MARK: - Private Functions
     private func makeRequest(code: String) -> URLRequest? {
-        let baseUrl = Constants.defaultBaseURL?.appendingPathComponent("oauth/token")
-        guard let baseUrl else {
-            print("Ошибка: невозможно создать baseURL")
-            return nil
-        }
+        let baseUrl = Constants.defaultBaseURL.appendingPathComponent("oauth/token")
         
         guard var urlComponents = URLComponents(url: baseUrl, resolvingAgainstBaseURL: false) else {
             print("Ошибка: не удалось создать URLComponents из \(baseUrl)")
